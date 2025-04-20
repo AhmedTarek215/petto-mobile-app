@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "837234657489",
+    "project_id": "petto-application",
+    "storage_bucket": "petto-application.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837234657489:android:059790f279d83a87819df0",
+        "android_client_info": {
+          "package_name": "com.example.petto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPtwcTih4JeucsXfs6DhllzEYg9Ie2YTM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

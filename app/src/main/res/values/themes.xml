@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!-- Base application theme. -->
+  <style name="Base.Theme.Petto" parent="Theme.Material3.DayNight.NoActionBar">
+    <!-- Customize your light theme here. -->
+    <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!-- Override Primary Colors to Avoid Purple -->
+    <item name="colorPrimary">#D16B78</item> <!-- Your desired color -->
+    <item name="colorPrimaryVariant">#D16B78</item>
+    <item name="colorAccent">#D16B78</item>
+  </style>
+
+  <style name="Theme.Petto" parent="Base.Theme.Petto" />
+</resources>

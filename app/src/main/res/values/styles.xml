@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="RoundedImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item> <!-- Adjust as needed -->
+    </style>
+
+    <style name="CustomFabStyle" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">#FBFBFF</item> <!-- Fill color -->
+        <item name="strokeColor">#1BBCB6</item>    <!-- Border color -->
+        <item name="strokeWidth">10dp</item>        <!-- Border width -->
+        <item name="shapeAppearance">@style/CustomFabShape</item>
+    </style>
+
+    <style name="CustomFabShape" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">0dp</item> <!-- Adjust for your radius -->
+    </style>
+
+
+</resources>

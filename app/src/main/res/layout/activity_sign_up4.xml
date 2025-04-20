@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:ignore="SpeakableTextPresentCheck">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FBFBFF"
+        android:padding="10dp"
+        tools:ignore="ExtraText">
+
+        <TextView
+            android:id="@+id/Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:fontFamily="@font/alexandriabold"
+            android:gravity="center"
+            android:text="Time for your Petto !"
+            android:textColor="#4F576B"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
+
+
+        <com.example.petto.SignUpProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="360dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.483"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/Title"
+            tools:ignore="TextSizeCheck" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="56dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progressBar">
+
+            <!-- Pet Type -->
+            <TextView
+                android:id="@+id/TypeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/alexandriasemibold"
+                android:text="Pet Type"
+                android:textColor="#4F576B"
+                android:textSize="17sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                android:textColorHint="#A9A9A9"
+                app:endIconMode="dropdown_menu">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_outline"
+                    android:hint="Pet Type"
+                    android:inputType="none"
+                    android:padding="11dp"
+                    android:textColorHint="#A9A9A9"
+                    tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Breed -->
+            <TextView
+                android:id="@+id/BreedTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:fontFamily="@font/alexandriasemibold"
+                android:text="Breed"
+                android:textColor="#4F576B"
+                android:textSize="17sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                android:textColorHint="#A9A9A9"
+                app:endIconMode="dropdown_menu">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerBreed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_outline"
+                    android:hint="Breed"
+                    android:inputType="none"
+                    android:padding="11dp"
+                    android:textColorHint="#A9A9A9"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Weight & Height in Horizontal Layout -->
+            <LinearLayout
+                android:id="@+id/linearLayout5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:orientation="horizontal">
+
+                <!-- Weight -->
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/WeightTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/alexandriasemibold"
+                        android:text="Weight"
+                        android:textColor="#4F576B"
+                        android:textSize="17sp" />
+
+                    <EditText
+                        android:id="@+id/etWeight"
+                        android:layout_width="140dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/edittext_outline"
+                        android:hint="In K.G"
+                        android:padding="11dp"
+                        android:textColorHint="#A9A9A9"
+                        tools:ignore="TouchTargetSizeCheck" />
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content" />
+
+                <!-- Height -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/HeightTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/alexandriasemibold"
+                        android:text="Height"
+                        android:textColor="#4F576B"
+                        android:textSize="17sp" />
+
+                    <EditText
+                        android:id="@+id/etHeight"
+                        android:layout_width="140dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/edittext_outline"
+                        android:hint="In Inches"
+                        android:padding="11dp"
+                        android:textColorHint="#A9A9A9"
+                        tools:ignore="TouchTargetSizeCheck" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Color -->
+            <TextView
+                android:id="@+id/ColorTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:fontFamily="@font/alexandriasemibold"
+                android:text="Color"
+                android:textColor="#4F576B"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/etColor"
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/edittext_outline"
+                android:hint="Salted Purple Rain"
+                android:padding="11dp"
+                android:textColorHint="#A9A9A9"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="63dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="36dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
+            tools:ignore="MissingConstraints">
+
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="59dp"
+                android:layout_height="47dp"
+                android:background="@drawable/pink_outline"
+                android:contentDescription="Back"
+                android:drawableLeft="@drawable/arrow_left"
+                android:gravity="center"
+                android:padding="10dp"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnNext"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/pink_pill"
+                android:fontFamily="@font/alexandriasemibold"
+                android:text="Done"
+                android:textColor="#FBFBFF"
+                android:textSize="18sp"
+                tools:ignore="HardcodedText,VisualLintButtonSize" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
