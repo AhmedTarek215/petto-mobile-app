@@ -1,10 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.Services.ReviewDialog">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:elevation="8dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:id="@+id/closeDialogIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="end"
+        android:src="@drawable/close"
+        android:contentDescription="Close"
+        android:padding="4dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rate this Service"
+        android:textSize="18sp"
+        android:fontFamily="@font/alexandriabold"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:textColor="#4F576B" />
+
+    <RatingBar
+        android:id="@+id/dialogRatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:numStars="5"
+        android:stepSize="1"
+        android:rating="0"
+        android:progressTint="#D16B78"
+        style="?android:attr/ratingBarStyle" />
+
+    <EditText
+        android:id="@+id/reviewEditText"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:hint="Write your review here ..."
+        android:gravity="top|start"
+        android:padding="10dp"
+        android:layout_marginTop="12dp"
+        android:textColor="#4F576B"
+        android:textSize="14sp"
+        android:fontFamily="@font/alexandriaregular"
+        android:inputType="textMultiLine" />
+
+    <Button
+        android:id="@+id/submitReviewButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="#D16B78"
+        android:textColor="#FBFBFF"
+        android:fontFamily="@font/alexandriabold"
+        android:layout_gravity="center"/>
+</LinearLayout>

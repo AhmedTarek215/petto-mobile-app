@@ -7,18 +7,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.petto.R
 import com.example.petto.data.model.PetService
 import com.example.petto.data.model.Review
 import com.example.petto.data.model.ReviewUser
 import com.example.petto.data.repository.ServiceRepository
-import kotlinx.coroutines.launch
-import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.launch
 import android.widget.*
-import android.widget.ImageView
 
 class ServiceProfile : AppCompatActivity() {
 
@@ -62,8 +61,13 @@ class ServiceProfile : AppCompatActivity() {
         loadServiceData(selectedServiceId)
 
         addReviewIcon.setOnClickListener {
-            //showReviewDialog()
+            showReviewDialog()
         }
+
+        addReviewIcon.setOnClickListener {
+            showReviewDialog()
+        }
+
     }
 
     private fun initializeViews() {
@@ -94,6 +98,7 @@ class ServiceProfile : AppCompatActivity() {
     private fun loadServiceData(serviceId: String) {
         lifecycleScope.launch {
             try {
+                // Load service details
                 db.collection("services").document(serviceId).get().addOnSuccessListener { document ->
                     if (document != null) {
                         serviceName.text = document.getString("name") ?: ""
@@ -114,6 +119,7 @@ class ServiceProfile : AppCompatActivity() {
                     }
                 }
 
+                // Load reviews
                 db.collection("services").document(serviceId)
                     .collection("reviews")
                     .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -123,7 +129,6 @@ class ServiceProfile : AppCompatActivity() {
                             val rating = (doc.getDouble("rating") ?: 0.0).toFloat()
                             val text = doc.getString("text")
                             val timestamp = doc.getString("timestamp") ?: ""
-
                             val date = doc.getString("date") ?: ""
                             val time = doc.getString("time") ?: ""
 
@@ -145,7 +150,7 @@ class ServiceProfile : AppCompatActivity() {
                                 time = time,
                                 rating = rating,
                                 r_comment = text,
-                                r_service_type = "", // Optionally fetch if stored
+                                r_service_type = "", // You can fill this if stored
                                 user = user
                             )
                         }
@@ -161,7 +166,7 @@ class ServiceProfile : AppCompatActivity() {
         }
     }
 
-    /*private fun showReviewDialog() {
+    private fun showReviewDialog() {
         val dialog = ReviewDialog(this, object : ReviewDialog.ReviewSubmitListener {
             override fun onReviewSubmitted(rating: Float, text: String?) {
                 val user = auth.currentUser ?: return
@@ -197,11 +202,14 @@ class ServiceProfile : AppCompatActivity() {
                             Toast.makeText(this@ServiceProfile, "Review submitted!", Toast.LENGTH_SHORT).show()
                             loadServiceData(selectedServiceId)
                         }
+                        .addOnFailureListener {
+                            showError("Failed to submit review.")
+                        }
                 }
             }
         })
         dialog.show()
-    }*/
+    }
 
     private fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
