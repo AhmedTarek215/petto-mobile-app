@@ -1,5 +1,8 @@
 package com.example.petto.ui.SignUp
 
+
+
+
 import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
@@ -8,9 +11,10 @@ import android.graphics.Color
 import android.text.Spanned
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.petto.ui.Login.Login
 import com.example.petto.R
 import com.example.petto.SignUpProgressBar
+import com.example.petto.data.viewModel.SignUpViewModel
+import com.example.petto.ui.Login.Login
 import com.google.android.material.textfield.TextInputLayout
 
 class SignUp1 : AppCompatActivity() {
@@ -37,35 +41,42 @@ class SignUp1 : AppCompatActivity() {
         btnNext = findViewById(R.id.btnNext)
         val tvLogin = findViewById<TextView>(R.id.tvLogin)
 
-        // **Set "Login" as clickable and colored text**
+        // Highlight "Login"
         val text = "Already have an account? Login"
         val spannableString = SpannableString(text)
         val pinkColor = ForegroundColorSpan(Color.parseColor("#D16B78"))
         spannableString.setSpan(pinkColor, text.indexOf("Login"), text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         tvLogin.text = spannableString
 
-        // **Navigate to Login screen when "Login" is clicked**
         tvLogin.setOnClickListener {
-            val intent = Intent(this, Login::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, Login::class.java))
         }
 
-        // **Progress bar setup**
-        val progressBar = findViewById<SignUpProgressBar>(R.id.progressBar)
-        progressBar.setProgress(1)
+        findViewById<SignUpProgressBar>(R.id.progressBar).setProgress(1)
 
         btnNext.setOnClickListener {
-            val intent = Intent(this, SignUp2::class.java)
-            intent.putExtra("progress", 2)
-            startActivity(intent)
+            if (validateFields()) {
+                saveUserPage1Data()
+                val intent = Intent(this, SignUp2::class.java)
+                intent.putExtra("progress", 2)
+                startActivity(intent)
+            }
         }
 
-        // **Setup dropdown lists**
         setupCityDropdown()
         setupGenderDropdown()
     }
 
-    // **Validation function**
+    private fun saveUserPage1Data() {
+        SignUpViewModel.firstName = etFirstName.text.toString().trim()
+        SignUpViewModel.lastName = etLastName.text.toString().trim()
+        SignUpViewModel.age = etAge.text.toString().toIntOrNull() ?: 0
+        SignUpViewModel.gender = spinnerGender.text.toString().trim()
+        SignUpViewModel.city = spinnerCity.text.toString().trim()
+        SignUpViewModel.area = spinnerArea.text.toString().trim()
+        SignUpViewModel.street = "" // Add if needed from another input
+    }
+
     private fun validateFields(): Boolean {
         if (etFirstName.text.isEmpty()) {
             etFirstName.error = "First Name is required"
@@ -100,12 +111,8 @@ class SignUp1 : AppCompatActivity() {
         spinnerCity.setAdapter(adapterCity)
 
         spinnerCity.setOnItemClickListener { _, _, position, _ ->
-            val selectedCity = cityList[position]
-            updateAreaDropdown(selectedCity)
-
-            // Remove floating label
-            val cityInputLayout = findViewById<TextInputLayout>(R.id.textInputLayout2)
-            cityInputLayout.hint = ""
+            updateAreaDropdown(cityList[position])
+            findViewById<TextInputLayout>(R.id.textInputLayout2).hint = ""
         }
     }
 
@@ -119,12 +126,10 @@ class SignUp1 : AppCompatActivity() {
         val areaList = areaMap[selectedCity] ?: emptyList()
         val adapterArea = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, areaList)
         spinnerArea.setAdapter(adapterArea)
-        spinnerArea.setText("", false) // Clear previous selection
+        spinnerArea.setText("", false)
 
         spinnerArea.setOnItemClickListener { _, _, _, _ ->
-            // Remove floating label
-            val areaInputLayout = findViewById<TextInputLayout>(R.id.textInputLayout3)
-            areaInputLayout.hint = ""
+            findViewById<TextInputLayout>(R.id.textInputLayout3).hint = ""
         }
     }
 
@@ -133,10 +138,8 @@ class SignUp1 : AppCompatActivity() {
         val adapterGender = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, genderList)
         spinnerGender.setAdapter(adapterGender)
 
-        // Remove floating hint when a selection is made
         spinnerGender.setOnItemClickListener { _, _, _, _ ->
-            val textInputLayout = findViewById<TextInputLayout>(R.id.textInputLayout1)
-            textInputLayout.hint = "" // Hide floating label
+            findViewById<TextInputLayout>(R.id.textInputLayout1).hint = ""
         }
     }
 }
