@@ -66,6 +66,8 @@ dependencies {
     implementation ("com.google.firebase:firebase-auth")
     implementation ("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-analytics")
+    implementation ("com.google.firebase:firebase-database:20.3.0")
+    implementation ( "com.google.firebase:firebase-storage:20.3.0")
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.navigation.fragment.ktx)

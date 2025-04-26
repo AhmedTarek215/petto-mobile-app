@@ -1,29 +1,19 @@
 package com.example.petto.ui.SignUp
 
-import android.app.Activity
-import android.app.AlertDialog
+
+
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.InputType
 import android.util.Log
 import android.widget.*
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.petto.R
 import com.example.petto.SignUpProgressBar
-import java.io.IOException
+import com.example.petto.data.viewModel.SignUpViewModel
 
 class SignUp2 : AppCompatActivity() {
 
-    private lateinit var profileImage: ImageView
-    private lateinit var btnImportPhoto: ImageView
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var etConfirmPassword: EditText
@@ -36,38 +26,11 @@ class SignUp2 : AppCompatActivity() {
     private var isPasswordVisible = false
     private var isConfirmPasswordVisible = false
 
-    private val galleryLauncher =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                resizeAndSetImage(it) // Resize and set image from gallery
-            }
-        }
-
-    private val cameraLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val imageBitmap = result.data?.extras?.get("data") as? Bitmap
-                imageBitmap?.let {
-                    profileImage.setImageBitmap(resizeBitmap(it)) // Resize and set image from camera
-                }
-            }
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_sign_up2)
 
-        // Apply window insets
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
         // Initialize views
-        profileImage = findViewById(R.id.profileImage)
-        btnImportPhoto = findViewById(R.id.btnImportPhoto)
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         etConfirmPassword = findViewById(R.id.etConfirmPassword)
@@ -77,16 +40,9 @@ class SignUp2 : AppCompatActivity() {
         btnNext = findViewById(R.id.btnNext)
         progressBar = findViewById(R.id.progressBar)
 
-        // Set progress bar step
-        val step = intent.getIntExtra("progress", 2) // Default is step 1
-        progressBar.setProgress(step) // Set the new progress
+        val step = intent.getIntExtra("progress", 2)
+        progressBar.setProgress(step)
 
-        // Image Import Functionality
-        btnImportPhoto.setOnClickListener {
-            showImagePickerDialog()
-        }
-
-        // Toggle password visibility
         passwordToggle.setOnClickListener {
             isPasswordVisible = !isPasswordVisible
             togglePasswordVisibility(etPassword, isPasswordVisible, passwordToggle)
@@ -97,76 +53,35 @@ class SignUp2 : AppCompatActivity() {
             togglePasswordVisibility(etConfirmPassword, isConfirmPasswordVisible, confirmPasswordToggle)
         }
 
-        // Navigate back to SignUp1
         btnBack.setOnClickListener {
             val intent = Intent(this, SignUp1::class.java)
-            intent.putExtra("progress", step - 1) // Update progress
+            intent.putExtra("progress", step - 1)
             startActivity(intent)
             finish()
         }
 
         btnNext.setOnClickListener {
             if (validateFields()) {
-                val currentStep = intent.getIntExtra("progress", 1) // Get current progress
-                Log.d("SignUp2", "Current progress: $currentStep") // Debugging line
+                SignUpViewModel.email = etEmail.text.toString().trim()
+                SignUpViewModel.password = etPassword.text.toString().trim()
 
                 val intent = Intent(this, SignUp3::class.java)
-                intent.putExtra("progress", currentStep + 1) // Correctly increment progress
+                intent.putExtra("progress", step + 1)
                 startActivity(intent)
                 finish()
             }
-        }
-
-    }
-
-    private fun showImagePickerDialog() {
-        val options = arrayOf("Take Photo", "Choose from Gallery")
-        AlertDialog.Builder(this)
-            .setTitle("Select Image")
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> openCamera()
-                    1 -> galleryLauncher.launch("image/*")
-                }
-            }
-            .show()
-    }
-
-    private fun openCamera() {
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraLauncher.launch(cameraIntent)
-    }
-
-    private fun resizeAndSetImage(uri: Uri) {
-        try {
-            val inputStream = contentResolver.openInputStream(uri)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            profileImage.setImageBitmap(resizeBitmap(bitmap))
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun resizeBitmap(bitmap: Bitmap): Bitmap {
-        val targetWidth = profileImage.width
-        val targetHeight = profileImage.height
-
-        return if (targetWidth > 0 && targetHeight > 0) {
-            Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true)
-        } else {
-            bitmap
         }
     }
 
     private fun togglePasswordVisibility(editText: EditText, isVisible: Boolean, toggleIcon: ImageView) {
         if (isVisible) {
             editText.inputType = InputType.TYPE_CLASS_TEXT
-            toggleIcon.setImageResource(R.drawable.visibility) // Show eye icon
+            toggleIcon.setImageResource(R.drawable.visibility)
         } else {
             editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            toggleIcon.setImageResource(R.drawable.crossed_eye) // Hide eye icon
+            toggleIcon.setImageResource(R.drawable.crossed_eye)
         }
-        editText.setSelection(editText.text.length) // Maintain cursor position
+        editText.setSelection(editText.text.length)
     }
 
     private fun validateFields(): Boolean {
@@ -176,13 +91,13 @@ class SignUp2 : AppCompatActivity() {
 
         var isValid = true
 
-        // Clear previous errors
-        etEmail.error = null
-        etPassword.error = null
-        etConfirmPassword.error = null
-
         if (email.isEmpty()) {
             etEmail.error = "Email is required"
+            isValid = false
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.error = "Enter a valid email"
             isValid = false
         }
 
@@ -191,12 +106,17 @@ class SignUp2 : AppCompatActivity() {
             isValid = false
         }
 
+        if (password.length < 6) {
+            etPassword.error = "Password must be at least 6 characters"
+            isValid = false
+        }
+
         if (confirmPassword.isEmpty()) {
             etConfirmPassword.error = "Confirm your password"
             isValid = false
         }
 
-        if (password.isNotEmpty() && confirmPassword.isNotEmpty() && password != confirmPassword) {
+        if (password != confirmPassword) {
             etConfirmPassword.error = "Passwords do not match"
             isValid = false
         }
