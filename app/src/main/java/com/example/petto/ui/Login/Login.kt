@@ -1,5 +1,7 @@
 package com.example.petto.ui.Login
 
+
+
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
@@ -8,11 +10,12 @@ import android.text.*
 import android.text.style.ForegroundColorSpan
 import android.text.style.TypefaceSpan
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.example.petto.R
 import com.example.petto.ui.SignUp.SignUp1
-import com.example.petto.ui.profiles.UserProfile// ✅ create this next
+import com.example.petto.ui.profiles.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 
 class Login : AppCompatActivity() {
@@ -22,6 +25,7 @@ class Login : AppCompatActivity() {
     private lateinit var btnLogin: Button
     private lateinit var passwordToggle: ImageView
     private lateinit var tvSignUP: TextView
+    private lateinit var tvForgetPassword: TextView
     private var isPasswordVisible = false
 
     @SuppressLint("ResourceType")
@@ -35,6 +39,7 @@ class Login : AppCompatActivity() {
         btnLogin = findViewById(R.id.btnLogin)
         passwordToggle = findViewById(R.id.passwordToggle)
         tvSignUP = findViewById(R.id.tvSignUp)
+        tvForgetPassword = findViewById(R.id.tvForgetPassword)
 
         // Toggle password visibility
         passwordToggle.setOnClickListener {
@@ -87,5 +92,49 @@ class Login : AppCompatActivity() {
                     }
                 }
         }
+
+
+
+
+        // 🛠 Handle Forgot Password
+        tvForgetPassword.setOnClickListener {
+            showForgotPasswordDialog()
+        }
+    }
+
+    private fun showForgotPasswordDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Reset Password")
+
+        val input = EditText(this)
+        input.hint = "Enter your registered email"
+        builder.setView(input)
+
+        builder.setPositiveButton("Send Reset Link") { dialog, _ ->
+            val email = input.text.toString().trim()
+            if (email.isEmpty()) {
+                Toast.makeText(this, "Please enter your email", Toast.LENGTH_SHORT).show()
+                return@setPositiveButton
+            }
+            sendPasswordResetEmail(email)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        builder.show()
+    }
+
+    private fun sendPasswordResetEmail(email: String) {
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Reset link sent to your email!", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Failed to send reset link: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                }
+            }
     }
 }
