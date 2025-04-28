@@ -13,6 +13,7 @@ import com.example.petto.ui.Login.Login
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.firestore.FirebaseFirestore
 
 class SignUp4 : AppCompatActivity() {
 
@@ -113,14 +114,14 @@ class SignUp4 : AppCompatActivity() {
                 SignUpViewModel.petHeight = height
                 SignUpViewModel.petColor = color
 
-                saveToFirebase()
+                saveToFirestore()
             }
         }
     }
 
-    private fun saveToFirebase() {
+    private fun saveToFirestore() {
         val auth = FirebaseAuth.getInstance()
-        val database = FirebaseDatabase.getInstance().reference
+        val firestore = FirebaseFirestore.getInstance()
 
         val email = SignUpViewModel.email
         val password = SignUpViewModel.password
@@ -128,7 +129,7 @@ class SignUp4 : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val uid = auth.currentUser?.uid ?: return@addOnCompleteListener
-                val userRef = database.child("Users").child(uid)
+                val userRef = firestore.collection("Users").document(uid)
 
                 val userData = mapOf(
                     "uid" to uid,
@@ -152,19 +153,20 @@ class SignUp4 : AppCompatActivity() {
                     )
                 )
 
-                userRef.setValue(userData).addOnSuccessListener {
-                    showSuccessDialog()
-                }.addOnFailureListener {
-                    showErrorDialog("Database error: ${it.message}")
+                userRef.set(userData).addOnSuccessListener {
+                    Toast.makeText(this, "Signup successful!", Toast.LENGTH_LONG).show()
+                    startActivity(Intent(this, Login::class.java))
+                    finish()
+                }.addOnFailureListener { e ->
+                    Toast.makeText(this, "Firestore Error: ${e.message}", Toast.LENGTH_LONG).show()
                 }
 
             } else {
-                val errorMessage = task.exception?.message ?: "Signup failed. Please try again."
-                Log.e("SignUp4", "Auth Failed: $errorMessage")
-                showErrorDialog(errorMessage)
+                Toast.makeText(this, "Signup failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
+
 
     private fun showSuccessDialog() {
         val builder = AlertDialog.Builder(this)
