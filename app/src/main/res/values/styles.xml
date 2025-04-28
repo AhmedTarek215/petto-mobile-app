@@ -17,5 +17,14 @@
         <item name="cornerSize">0dp</item> <!-- Adjust for your radius -->
     </style>
 
+    <style name="CustomAlertDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:background">@drawable/dialog_background</item> <!-- Rounded background -->
+    </style>
+
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_animation</item>
+    </style>
+
 
 </resources>
