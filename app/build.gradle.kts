@@ -68,6 +68,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation ("com.google.firebase:firebase-database:20.3.0")
     implementation ( "com.google.firebase:firebase-storage:20.3.0")
+    implementation ("androidx.recyclerview:recyclerview:1.3.2")
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.navigation.fragment.ktx)
@@ -79,6 +80,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }
 
 apply(plugin = "com.google.gms.google-services")
