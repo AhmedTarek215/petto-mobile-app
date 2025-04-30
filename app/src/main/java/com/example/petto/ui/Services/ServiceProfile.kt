@@ -1,6 +1,12 @@
 package com.example.petto.ui.Services
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.widget.ImageView
+import android.widget.RatingBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -13,11 +19,11 @@ import com.example.petto.data.model.PetService
 import com.example.petto.data.model.Review
 import com.example.petto.data.model.ReviewUser
 import com.example.petto.data.repository.ServiceRepository
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.launch
-import android.widget.*
 
 class ServiceProfile : AppCompatActivity() {
 
@@ -32,6 +38,7 @@ class ServiceProfile : AppCompatActivity() {
     private lateinit var reviewsRecyclerView: RecyclerView
     private lateinit var ratingBar: RatingBar
     private lateinit var addReviewIcon: ImageView
+    private lateinit var averageRatingText: TextView
 
     private lateinit var servicesAdapter: ServiceAdapter
     private lateinit var reviewsAdapter: ReviewsAdapter
@@ -52,16 +59,21 @@ class ServiceProfile : AppCompatActivity() {
         initializeViews()
         setupAdapters()
 
-        selectedServiceId = intent.getStringExtra("SERVICE_ID") ?: run {
+        selectedServiceId = "service1"
+
+        /*selectedServiceId = intent.getStringExtra("SERVICE_ID") ?: run {
             showError("No service ID provided")
             finish()
             return
-        }
+        }*/
 
         loadServiceData(selectedServiceId)
 
-        addReviewIcon.setOnClickListener {
-            showReviewDialog()
+        serviceWeb.setOnClickListener {
+            val url = serviceWeb.text.toString()
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(if (!url.startsWith("http")) "http://$url" else url)
+            startActivity(intent)
         }
 
         addReviewIcon.setOnClickListener {
@@ -81,6 +93,7 @@ class ServiceProfile : AppCompatActivity() {
         rvServices = findViewById(R.id.rvServices)
         reviewsRecyclerView = findViewById(R.id.reviewsRecyclerView)
         ratingBar = findViewById(R.id.ratingBar)
+        averageRatingText = findViewById(R.id.ratingValue)
         addReviewIcon = findViewById(R.id.add)
     }
 
@@ -88,8 +101,8 @@ class ServiceProfile : AppCompatActivity() {
         rvServices.layoutManager = GridLayoutManager(this, 2)
         reviewsRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        //servicesAdapter = ServiceAdapter(servicesList)
-        //rvServices.adapter = servicesAdapter
+        servicesAdapter = ServiceAdapter(servicesList)
+        rvServices.adapter = servicesAdapter
 
         reviewsAdapter = ReviewsAdapter(reviewsList)
         reviewsRecyclerView.adapter = reviewsAdapter
@@ -99,25 +112,36 @@ class ServiceProfile : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 // Load service details
-                db.collection("services").document(serviceId).get().addOnSuccessListener { document ->
-                    if (document != null) {
-                        serviceName.text = document.getString("name") ?: ""
-                        serviceTime.text = document.getString("time") ?: ""
-                        servicePhone.text = document.getString("phone") ?: ""
-                        serviceWeb.text = document.getString("web") ?: ""
-                        serviceLocation.text = document.getString("location") ?: ""
+                db.collection("services").document(serviceId).get()
+                    .addOnSuccessListener { document ->
+                        if (document != null) {
+                            serviceName.text = document.getString("name") ?: ""
+                            serviceTime.text = document.getString("time") ?: ""
+                            servicePhone.text = document.getString("phone") ?: ""
+                            serviceWeb.text = document.getString("web") ?: ""
+                            serviceLocation.text = document.getString("location") ?: ""
 
-                        val imageUrl = document.getString("imageUrl")
-                        Glide.with(this@ServiceProfile).load(imageUrl).into(serviceImage)
+                            val imageUrl = document.getString("imageUrl")
+                            Glide.with(this@ServiceProfile)
+                                .load(imageUrl)
+                                .placeholder(R.drawable.service_image) // Optional
+                                .error(R.drawable.service_image)           // Show fallback if image fails
+                                .into(serviceImage)
 
-                        val serviceNames = document.get("services") as? List<String> ?: emptyList()
-                        servicesList.clear()
-                        servicesList.addAll(serviceNames.map { PetService(it) })
-                        servicesAdapter.notifyDataSetChanged()
-                    } else {
-                        showError("Service not found")
+                            Log.d("ServiceProfile", "Image URL: $imageUrl")
+
+
+                            val serviceNames = document.get("service") as? List<String> ?: emptyList()
+                            servicesList.clear()
+                            servicesList.addAll(serviceNames.map { PetService(name = it) })
+                            servicesAdapter.notifyDataSetChanged()
+                        } else {
+                            showError("Service not found")
+                        }
                     }
-                }
+                    .addOnFailureListener {
+                        showError("Failed to load service details.")
+                    }
 
                 // Load reviews
                 db.collection("services").document(serviceId)
@@ -128,7 +152,6 @@ class ServiceProfile : AppCompatActivity() {
                         val reviews = querySnapshot.documents.mapNotNull { doc ->
                             val rating = (doc.getDouble("rating") ?: 0.0).toFloat()
                             val text = doc.getString("text")
-                            val timestamp = doc.getString("timestamp") ?: ""
                             val date = doc.getString("date") ?: ""
                             val time = doc.getString("time") ?: ""
 
@@ -138,11 +161,14 @@ class ServiceProfile : AppCompatActivity() {
                                     user_id = userMap["user_id"] as? String ?: "",
                                     fname = userMap["fname"] as? String ?: "",
                                     lname = userMap["lname"] as? String ?: "",
-                                    user_img = userMap["user_img"] as? String ?: ""
+                                    user_img = "" // No image for now
                                 )
                             } else {
                                 ReviewUser()
                             }
+
+                            // Fetching timestamp as a Long (milliseconds)
+                            val timestamp = (doc.getTimestamp("timestamp")?.seconds ?: 0L) * 1000L // Convert seconds to milliseconds
 
                             Review(
                                 review_id = doc.id,
@@ -150,15 +176,28 @@ class ServiceProfile : AppCompatActivity() {
                                 time = time,
                                 rating = rating,
                                 r_comment = text,
-                                r_service_type = "", // You can fill this if stored
-                                user = user
+                                r_service_type = "", // optional, leave empty
+                                user = user,
+                                timestamp = timestamp // Use the proper Long timestamp
                             )
                         }
 
                         reviewsList.clear()
                         reviewsList.addAll(reviews)
                         reviewsAdapter.notifyDataSetChanged()
+
+                        // ✅ Calculate and display average rating
+                        val totalRating = reviews.sumOf { it.rating.toDouble() }
+                        val averageRating = if (reviews.isNotEmpty()) totalRating / reviews.size else 0.0
+                        ratingBar.rating = averageRating.toFloat()
+                        averageRatingText.text = String.format("%.1f", averageRating)
+
+
                     }
+                    .addOnFailureListener {
+                        showError("Failed to load reviews.")
+                    }
+
 
             } catch (e: Exception) {
                 showError("Failed to load data: ${e.message}")
@@ -172,40 +211,38 @@ class ServiceProfile : AppCompatActivity() {
                 val user = auth.currentUser ?: return
                 val userId = user.uid
 
-                db.collection("users").document(userId).get().addOnSuccessListener { userDoc ->
-                    val userName = userDoc.getString("name") ?: "Anonymous"
-                    val profileImage = userDoc.getString("profileImageUrl") ?: ""
+                db.collection("users").document(userId).get()
+                    .addOnSuccessListener { userDoc ->
+                        val fname = userDoc.getString("fname") ?: ""
+                        val lname = userDoc.getString("lname") ?: ""
 
-                    val timestamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault())
-                        .format(java.util.Date())
-                    val date = timestamp.split(" ").getOrNull(0) ?: ""
-                    val time = timestamp.split(" ").getOrNull(1) ?: ""
-
-                    val reviewData = hashMapOf(
-                        "rating" to rating.toDouble(),
-                        "text" to (text ?: ""),
-                        "timestamp" to timestamp,
-                        "date" to date,
-                        "time" to time,
-                        "user" to hashMapOf(
-                            "user_id" to userId,
-                            "fname" to userName.split(" ").firstOrNull(),
-                            "lname" to userName.split(" ").getOrNull(1),
-                            "user_img" to profileImage
+                        val reviewData = hashMapOf(
+                            "rating" to rating.toDouble(),
+                            "text" to (text ?: ""),
+                            "timestamp" to Timestamp.now(), // Native Firestore Timestamp!
+                            "user" to hashMapOf(
+                                "user_id" to userId,
+                                "fname" to fname,
+                                "lname" to lname
+                                // No user_img for now
+                            )
                         )
-                    )
 
-                    db.collection("services").document(selectedServiceId)
-                        .collection("reviews")
-                        .add(reviewData)
-                        .addOnSuccessListener {
-                            Toast.makeText(this@ServiceProfile, "Review submitted!", Toast.LENGTH_SHORT).show()
-                            loadServiceData(selectedServiceId)
-                        }
-                        .addOnFailureListener {
-                            showError("Failed to submit review.")
-                        }
-                }
+                        db.collection("services")
+                            .document(selectedServiceId)
+                            .collection("reviews")
+                            .add(reviewData)
+                            .addOnSuccessListener {
+                                Toast.makeText(this@ServiceProfile, "Review submitted!", Toast.LENGTH_SHORT).show()
+                                loadServiceData(selectedServiceId) // Refresh reviews
+                            }
+                            .addOnFailureListener {
+                                showError("Failed to submit review.")
+                            }
+                    }
+                    .addOnFailureListener {
+                        showError("Failed to fetch user info.")
+                    }
             }
         })
         dialog.show()

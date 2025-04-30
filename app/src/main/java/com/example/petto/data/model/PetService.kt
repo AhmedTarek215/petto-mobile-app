@@ -8,13 +8,8 @@ data class PetService(
     val social_media: String? = null,
     val services: List<String> = listOf(),
     val contact_info: String = "",
-    val address: Address = Address()
+    val location: String = ""
 )
 
-data class Address(
-    val street: String = "",
-    val city: String = "",
-    val area: String = ""
-)
 
 
