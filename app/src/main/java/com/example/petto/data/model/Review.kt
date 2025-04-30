@@ -7,7 +7,8 @@ data class Review(
     val r_service_type: String = "",
     val rating: Float = 0f,
     val r_comment: String? = null,
-    val user: ReviewUser = ReviewUser()
+    val user: ReviewUser = ReviewUser(),
+    val timestamp: Long = 0L  // Add timestamp field as Long
 )
 
 data class ReviewUser(

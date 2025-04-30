@@ -34,7 +34,8 @@
         </activity>
         <activity
             android:name=".ui.Services.ReviewDialog"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
