@@ -50,6 +50,19 @@
             android:textColor="#555555"
             android:layout_marginTop="8dp"/>
 
+        <TextView
+            android:id="@+id/tipLinkTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Read more..."
+            android:textColor="@color/progress_active"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:autoLink="web"
+            android:visibility="gone" />
+
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>
 

@@ -1,6 +1,8 @@
 package com.example.petto.ui.tips
 
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +20,8 @@ class TipsAdapter(private var tipsList: List<Tip>) :
         val imageView: ImageView = view.findViewById(R.id.tipImageView)
         val titleTextView: TextView = view.findViewById(R.id.tipTitleTextView)
         val contentTextView: TextView = view.findViewById(R.id.tipContentTextView)
+        val linkTextView: TextView = view.findViewById(R.id.tipLinkTextView)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TipViewHolder {
@@ -38,6 +42,18 @@ class TipsAdapter(private var tipsList: List<Tip>) :
                 .into(holder.imageView)
         } else {
             holder.imageView.visibility = View.GONE
+        }
+
+        // Show link if available
+        if (!tip.url.isNullOrEmpty()) {
+            holder.linkTextView.visibility = View.VISIBLE
+            holder.linkTextView.text = "Read more"
+            holder.linkTextView.setOnClickListener {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(tip.url))
+                it.context.startActivity(intent)
+            }
+        } else {
+            holder.linkTextView.visibility = View.GONE
         }
     }
 

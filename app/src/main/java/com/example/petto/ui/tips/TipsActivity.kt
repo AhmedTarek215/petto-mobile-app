@@ -1,16 +1,27 @@
 package com.example.petto.ui.tips
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.petto.HomeActivity
 import com.example.petto.R
 import com.example.petto.data.repository.TipRepository
+import com.example.petto.ui.notification.NotificationFragment
+import com.example.petto.ui.post.CreatePostActivity
+import com.example.petto.ui.post.PostListFragment
+import com.example.petto.ui.profiles.UserProfile
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,7 +52,15 @@ class TipsActivity : AppCompatActivity() {
         tipsAdapter = TipsAdapter(emptyList())
         tipsRecyclerView.adapter = tipsAdapter
 
+
+
+        // Setup Bottom Navigation
+//        setupBottomNavigation()
+
+        // data fetching
         fetchTipsFromFirestore()
+
+
     }
 
     private fun fetchTipsFromFirestore() {
@@ -57,5 +76,28 @@ class TipsActivity : AppCompatActivity() {
             loadingProgressBar.visibility = View.GONE
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
 
