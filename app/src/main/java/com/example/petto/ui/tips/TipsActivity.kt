@@ -1,12 +1,12 @@
 package com.example.petto.ui.tips
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.petto.R
@@ -21,17 +21,16 @@ class TipsActivity : AppCompatActivity() {
     private lateinit var tipsAdapter: TipsAdapter
     private lateinit var loadingProgressBar: ProgressBar
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tips)
 
-        // Setup Toolbar
-        val toolbar: Toolbar = findViewById(R.id.tipsToolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.setNavigationOnClickListener {
+        val backButton: ImageView = findViewById(R.id.backButton)
+        backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
 
 
         tipsRecyclerView = findViewById(R.id.tipsRecyclerView)
@@ -41,7 +40,15 @@ class TipsActivity : AppCompatActivity() {
         tipsAdapter = TipsAdapter(emptyList())
         tipsRecyclerView.adapter = tipsAdapter
 
+
+
+        // Setup Bottom Navigation
+//        setupBottomNavigation()
+
+        // data fetching
         fetchTipsFromFirestore()
+
+
     }
 
     private fun fetchTipsFromFirestore() {
@@ -58,4 +65,5 @@ class TipsActivity : AppCompatActivity() {
         }
     }
 }
+
 

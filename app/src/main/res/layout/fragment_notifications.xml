@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1BBCB6"
-    tools:context=".ui.tips.TipsActivity">
+    android:background="#1BBCB6">
 
     <LinearLayout
         android:id="@+id/tipsToolbar"
@@ -32,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/alexandriasemibold"
-            android:text="Tips and Tricks"
+            android:text="Notifications"
             android:textAlignment="center"
             android:textColor="#4F576B"
             android:textSize="24sp" />
@@ -41,7 +40,7 @@
 
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tipsRecyclerView"
+        android:id="@+id/PostsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
@@ -64,13 +63,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-<!--    &lt;!&ndash; Include your custom navigation bar layout &ndash;&gt;-->
-<!--    <include-->
-<!--        android:id="@+id/custom_bottom_nav"-->
-<!--        layout="@layout/custom_bottom_nav"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"/>-->
+    <!--    &lt;!&ndash; Include your custom navigation bar layout &ndash;&gt;-->
+    <!--    <include-->
+    <!--        android:id="@+id/custom_bottom_nav"-->
+    <!--        layout="@layout/custom_bottom_nav"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"/>-->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

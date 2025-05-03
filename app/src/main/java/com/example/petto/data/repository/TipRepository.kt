@@ -15,7 +15,9 @@ object TipRepository {
                     id = doc.id,
                     title = doc.getString("title") ?: "",
                     content = doc.getString("content") ?: "",
-                    imageUrl = doc.getString("imageUrl") ?: ""
+                    imageUrl = doc.getString("imageUrl") ?: "",
+                    url = doc.getString("url") // ✅ include this line
+
                 )
             }
         } catch (e: Exception) {

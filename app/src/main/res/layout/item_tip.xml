@@ -8,7 +8,7 @@
     android:layout_margin="16dp"
     card_view:cardCornerRadius="20dp"
     card_view:cardElevation="8dp"
-    card_view:cardBackgroundColor="@android:color/white">
+    card_view:cardBackgroundColor="#FBFBFF">
 
     <LinearLayout
         android:orientation="vertical"
@@ -25,11 +25,6 @@
             android:adjustViewBounds="true"
             android:background="@drawable/image_border" />
 
-        <!-- Space between Image and Title -->
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="16dp" />
-
         <!-- Tip Title -->
         <TextView
             android:id="@+id/tipTitleTextView"
@@ -37,8 +32,9 @@
             android:layout_height="wrap_content"
             android:text="Tip Title"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"/>
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/alexandriamedium"
+            android:textColor="#4F576B"/>
 
         <!-- Tip Content -->
         <TextView
@@ -47,8 +43,22 @@
             android:layout_height="wrap_content"
             android:text="Tip content goes here..."
             android:textSize="14sp"
-            android:textColor="#555555"
-            android:layout_marginTop="8dp"/>
+            android:fontFamily="@font/alexandriaregular"
+            android:textColor="#9D9D9D"
+            android:layout_marginTop="6dp"/>
+
+        <TextView
+            android:id="@+id/tipLinkTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Read more..."
+            android:textColor="#D16B78"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:autoLink="web"
+            android:visibility="gone" />
+
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
