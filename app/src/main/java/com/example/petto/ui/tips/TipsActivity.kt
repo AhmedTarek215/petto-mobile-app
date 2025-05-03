@@ -1,27 +1,16 @@
 package com.example.petto.ui.tips
 
-import android.content.Intent
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
-
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.petto.HomeActivity
 import com.example.petto.R
 import com.example.petto.data.repository.TipRepository
-import com.example.petto.ui.notification.NotificationFragment
-import com.example.petto.ui.post.CreatePostActivity
-import com.example.petto.ui.post.PostListFragment
-import com.example.petto.ui.profiles.UserProfile
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,17 +21,16 @@ class TipsActivity : AppCompatActivity() {
     private lateinit var tipsAdapter: TipsAdapter
     private lateinit var loadingProgressBar: ProgressBar
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tips)
 
-        // Setup Toolbar
-        val toolbar: Toolbar = findViewById(R.id.tipsToolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.setNavigationOnClickListener {
+        val backButton: ImageView = findViewById(R.id.backButton)
+        backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
 
 
         tipsRecyclerView = findViewById(R.id.tipsRecyclerView)
@@ -76,28 +64,6 @@ class TipsActivity : AppCompatActivity() {
             loadingProgressBar.visibility = View.GONE
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 
