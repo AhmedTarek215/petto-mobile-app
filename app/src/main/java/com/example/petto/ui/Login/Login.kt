@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.example.petto.R
 import com.example.petto.ui.SignUp.SignUp1
+import com.example.petto.ui.profiles.PetProfile
 import com.example.petto.ui.profiles.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 

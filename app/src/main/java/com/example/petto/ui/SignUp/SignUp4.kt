@@ -135,7 +135,7 @@ class SignUp4 : AppCompatActivity() {
                     "uid" to uid,
                     "firstName" to SignUpViewModel.firstName,
                     "lastName" to SignUpViewModel.lastName,
-                    "age" to SignUpViewModel.age,
+                    "age" to  SignUpViewModel.age,
                     "gender" to SignUpViewModel.gender,
                     "city" to SignUpViewModel.city,
                     "area" to SignUpViewModel.area,
