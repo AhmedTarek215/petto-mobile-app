@@ -1,59 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="10dp">
 
-        <!-- Title -->
-        <TextView
-            android:id="@+id/textViewCreatePostTitle"
+    <!-- Fixed Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/backButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create New Post"
+            android:src="@drawable/back"
+            android:contentDescription="Back" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Create post"
+            android:textColor="#1BBCB6"
+            android:fontFamily="@font/alexandriasemibold"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:paddingBottom="16dp"/>
-
-        <!-- Post Content Input -->
-        <EditText
-            android:id="@+id/editTextPostContent"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:hint="What's on your mind?"
-            android:gravity="top|start"
-            android:background="@drawable/menu_item_background"
-            android:padding="12dp"
-            android:textSize="16sp"
-            android:maxLines="5"
-            android:minLines="3"/>
-
-        <!-- Upload Image Button (Optional) -->
-        <Button
-            android:id="@+id/buttonUploadImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Upload Image (Optional)"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="@color/progress_active"/>
-
-        <!-- Submit Post Button -->
-        <Button
-            android:id="@+id/buttonSubmitPost"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Post"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="@color/progress_active"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"/>
-
+            android:textAlignment="center" />
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profileImageView"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="10dp"
+                    android:contentDescription="Profile Picture"
+                    android:src="@drawable/profile" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User Name"
+                    android:layout_marginStart="5dp"
+                    android:fontFamily="@font/alexandriaregular"
+                    android:textSize="17sp"
+                    android:textColor="#4F576B" />
+            </LinearLayout>
+
+            <!-- Post Input -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bg_post_input"
+                android:padding="12dp"
+                android:elevation="4dp">
+
+                <EditText
+                    android:id="@+id/editTextPost"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="What’s on your mind?..."
+                    android:background="@android:color/transparent"
+                    android:gravity="top|start"
+                    android:inputType="textMultiLine"
+                    android:maxLines="6"
+                    android:textColor="#4F576B"
+                    android:fontFamily="@font/alexandriasemibold"
+                    android:layout_margin="10dp"
+                    android:textSize="17sp" />
+
+                <ImageView
+                    android:id="@+id/btnAttach"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|end"
+                    android:src="@drawable/paperclip"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:contentDescription="Attach media"
+                    android:padding="4dp" />
+            </FrameLayout>
+
+
+            <!-- Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="27dp"
+                android:padding="5dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/white_pill_stroke"
+                    android:fontFamily="@font/alexandriasemibold"
+                    android:text="Cancel"
+                    android:paddingStart="30dp"
+                    android:paddingEnd="30dp"
+                    android:layout_marginEnd="20dp"
+                    android:textColor="#D16B78"
+                    android:textSize="16sp"
+                    android:elevation="5dp"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnPost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pink_pill"
+                    android:fontFamily="@font/alexandriasemibold"
+                    android:text="Post"
+                    android:layout_marginStart="20dp"
+                    android:paddingStart="41dp"
+                    android:paddingEnd="41dp"
+                    android:textColor="#FBFBFF"
+                    android:textSize="16sp"
+                    android:elevation="5dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
