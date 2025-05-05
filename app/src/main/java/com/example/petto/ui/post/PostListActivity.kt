@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.petto.R
 import com.example.petto.data.model.Post
+import android.view.View
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -31,9 +32,8 @@ class PostListActivity : AppCompatActivity() {
 
         loadPosts()
     }
-
     private fun loadPosts() {
-        progressBar.visibility = android.view.View.VISIBLE
+        progressBar.visibility = View.VISIBLE
 
         firestore.collection("posts")
             .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -41,14 +41,17 @@ class PostListActivity : AppCompatActivity() {
             .addOnSuccessListener { result ->
                 val posts = result.mapNotNull { doc ->
                     val post = doc.toObject(Post::class.java)
-                    post.copy(id = doc.id) // ✅ Attach document ID to each post
+                    post.id = doc.id // Assign Firestore document ID
+                    post
                 }
                 postAdapter.updatePosts(posts)
-                progressBar.visibility = android.view.View.GONE
+                progressBar.visibility = View.GONE
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Failed to load posts", Toast.LENGTH_SHORT).show()
-                progressBar.visibility = android.view.View.GONE
+                progressBar.visibility = View.GONE
             }
     }
+
+
 }

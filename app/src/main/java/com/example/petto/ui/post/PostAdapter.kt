@@ -1,17 +1,19 @@
 package com.example.petto.ui.post
 
-import android.util.Log
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.petto.R
 import com.example.petto.data.model.Post
+import com.example.petto.data.model.LikeUser
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,6 +32,8 @@ class PostAdapter(private var posts: List<Post>) : RecyclerView.Adapter<PostAdap
         val likeButton: ImageView = view.findViewById(R.id.likeButton)
         val likeCountText: TextView = view.findViewById(R.id.likeCountText)
         val commentButton: ImageView = view.findViewById(R.id.commentButton)
+        val commentCountText: TextView = view.findViewById(R.id.commentCountText)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -86,7 +90,6 @@ class PostAdapter(private var posts: List<Post>) : RecyclerView.Adapter<PostAdap
 
                 holder.likeButton.setOnClickListener {
                     if (!isLiked) {
-                        // Add like
                         val likeData = mapOf("timestamp" to Timestamp.now())
                         likeDocRef.set(likeData).addOnSuccessListener {
                             firestore.runTransaction { transaction ->
@@ -103,7 +106,6 @@ class PostAdapter(private var posts: List<Post>) : RecyclerView.Adapter<PostAdap
                             }
                         }
                     } else {
-                        // Remove like
                         likeDocRef.delete().addOnSuccessListener {
                             firestore.runTransaction { transaction ->
                                 val snapshot = transaction.get(postRef)
@@ -121,10 +123,48 @@ class PostAdapter(private var posts: List<Post>) : RecyclerView.Adapter<PostAdap
                     }
                 }
             }
+
+            holder.likeCountText.setOnClickListener {
+                val bottomSheetView = LayoutInflater.from(holder.itemView.context)
+                    .inflate(R.layout.layout_bottom_sheet_likes, null)
+
+                val dialog = BottomSheetDialog(holder.itemView.context)
+                dialog.setContentView(bottomSheetView)
+
+                val likesRecyclerView = bottomSheetView.findViewById<RecyclerView>(R.id.likesRecyclerView)
+                likesRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
+
+                postRef.collection("likes").get().addOnSuccessListener { likesSnapshot ->
+                    val userIds = likesSnapshot.documents.map { it.id }
+                    val users = mutableListOf<LikeUser>()
+                    val userCollection = firestore.collection("Users")
+
+                    for (userIdItem in userIds) {
+                        userCollection.document(userIdItem).get().addOnSuccessListener { userDoc ->
+                            val name = userDoc.getString("firstName").orEmpty() + " " + userDoc.getString("lastName").orEmpty()
+                            val imageUrl = userDoc.getString("profileImageUrl") ?: ""
+                            users.add(LikeUser(userIdItem, name, imageUrl))
+
+                            if (users.size == userIds.size) {
+                                likesRecyclerView.adapter = LikeUserAdapter(users)
+                            }
+                        }
+                    }
+                }
+                dialog.show()
+            }
         }
+        holder.commentCountText.text = post.commentsCount.toString()
+
 
         holder.commentButton.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "Comment clicked", Toast.LENGTH_SHORT).show()
+            if (post.id.isNotEmpty()) {
+                val context = holder.itemView.context
+                val intent = Intent(context, CommentsActivity::class.java)
+                intent.putExtra("postId", post.id)
+                holder.itemView.context.startActivity(intent)            } else {
+                Toast.makeText(holder.itemView.context, "Invalid Post ID", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

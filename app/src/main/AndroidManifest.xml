@@ -139,7 +139,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".HomeActivity"
+
+        <activity android:name=".ui.post.CommentsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

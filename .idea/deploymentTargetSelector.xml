@@ -13,13 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="TipsActivity">
+      <SelectionState runConfigName="CommentsActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="TipsActivity (2)">
+      <SelectionState runConfigName="PostListActivity (2)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="TipsActivity (3)">
+      <SelectionState runConfigName="CreatePostActivity (1)">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="CommentsActivity (2)">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="Login">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
