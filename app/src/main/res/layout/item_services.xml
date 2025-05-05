@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginEnd="12dp"
+    app:cardBackgroundColor="#1BBCB6"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="4dp"
+    android:layout_marginTop="7dp"
+    android:layout_marginBottom="7dp"
+    android:layout_marginRight="7dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1BBCB6">
+
+        <!-- Service Image -->
+        <ImageView
+            android:id="@+id/serviceImage"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/service_image" />
+
+        <!-- Star + Rating -->
+        <LinearLayout
+            android:id="@+id/ratingLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="1dp"
+            android:background="@drawable/rating_bg"
+            android:layout_alignBottom="@id/serviceImage"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="7dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:layout_marginStart="3dp"
+                android:src="@drawable/star" />
+
+            <TextView
+                android:id="@+id/serviceRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.5"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:fontFamily="@font/alexandriaregular"
+                android:textColor="#FBFBFF"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="3dp"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <!-- Name & Bookmark -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/serviceImage"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/serviceName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Shelter 1"
+                android:fontFamily="@font/alexandriamedium"
+                android:layout_margin="1dp"
+                android:textColor="#4F576B"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/bookmarkIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:src="@drawable/save"/>
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -33,6 +33,7 @@ class ServiceProfile : AppCompatActivity() {
     private lateinit var servicePhone: TextView
     private lateinit var serviceWeb: TextView
     private lateinit var serviceLocation: TextView
+    private lateinit var backButton: ImageView
 
     private lateinit var rvServices: RecyclerView
     private lateinit var reviewsRecyclerView: RecyclerView
@@ -59,13 +60,13 @@ class ServiceProfile : AppCompatActivity() {
         initializeViews()
         setupAdapters()
 
-        selectedServiceId = "service1"
+        //selectedServiceId = "service1"
 
-        /*selectedServiceId = intent.getStringExtra("SERVICE_ID") ?: run {
+        selectedServiceId = intent.getStringExtra("service_id") ?: run {
             showError("No service ID provided")
             finish()
             return
-        }*/
+        }
 
         loadServiceData(selectedServiceId)
 
@@ -74,6 +75,10 @@ class ServiceProfile : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(if (!url.startsWith("http")) "http://$url" else url)
             startActivity(intent)
+        }
+
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
 
         addReviewIcon.setOnClickListener {
@@ -89,6 +94,7 @@ class ServiceProfile : AppCompatActivity() {
         servicePhone = findViewById(R.id.phone)
         serviceWeb = findViewById(R.id.web)
         serviceLocation = findViewById(R.id.location)
+        backButton = findViewById(R.id.btnBack)
 
         rvServices = findViewById(R.id.rvServices)
         reviewsRecyclerView = findViewById(R.id.reviewsRecyclerView)
@@ -124,12 +130,9 @@ class ServiceProfile : AppCompatActivity() {
                             val imageUrl = document.getString("imageUrl")
                             Glide.with(this@ServiceProfile)
                                 .load(imageUrl)
-                                .placeholder(R.drawable.service_image) // Optional
-                                .error(R.drawable.service_image)           // Show fallback if image fails
+                                .placeholder(R.drawable.service_image)
+                                .error(R.drawable.service_image)
                                 .into(serviceImage)
-
-                            Log.d("ServiceProfile", "Image URL: $imageUrl")
-
 
                             val serviceNames = document.get("service") as? List<String> ?: emptyList()
                             servicesList.clear()
@@ -161,14 +164,13 @@ class ServiceProfile : AppCompatActivity() {
                                     user_id = userMap["user_id"] as? String ?: "",
                                     fname = userMap["fname"] as? String ?: "",
                                     lname = userMap["lname"] as? String ?: "",
-                                    user_img = "" // No image for now
+                                    user_img = ""
                                 )
                             } else {
                                 ReviewUser()
                             }
 
-                            // Fetching timestamp as a Long (milliseconds)
-                            val timestamp = (doc.getTimestamp("timestamp")?.seconds ?: 0L) * 1000L // Convert seconds to milliseconds
+                            val timestamp = (doc.getTimestamp("timestamp")?.seconds ?: 0L) * 1000L
 
                             Review(
                                 review_id = doc.id,
@@ -176,9 +178,9 @@ class ServiceProfile : AppCompatActivity() {
                                 time = time,
                                 rating = rating,
                                 r_comment = text,
-                                r_service_type = "", // optional, leave empty
+                                r_service_type = "",
                                 user = user,
-                                timestamp = timestamp // Use the proper Long timestamp
+                                timestamp = timestamp
                             )
                         }
 
@@ -189,21 +191,31 @@ class ServiceProfile : AppCompatActivity() {
                         // ✅ Calculate and display average rating
                         val totalRating = reviews.sumOf { it.rating.toDouble() }
                         val averageRating = if (reviews.isNotEmpty()) totalRating / reviews.size else 0.0
+
                         ratingBar.rating = averageRating.toFloat()
                         averageRatingText.text = String.format("%.1f", averageRating)
 
-
+                        // ✅ Update the average rating in Firestore
+                        db.collection("services")
+                            .document(serviceId)
+                            .update("average_rating", averageRating)
+                            .addOnSuccessListener {
+                                Log.d("ServiceProfile", "Average rating updated: $averageRating")
+                            }
+                            .addOnFailureListener {
+                                Log.e("ServiceProfile", "Failed to update rating: ${it.message}")
+                            }
                     }
                     .addOnFailureListener {
                         showError("Failed to load reviews.")
                     }
-
 
             } catch (e: Exception) {
                 showError("Failed to load data: ${e.message}")
             }
         }
     }
+
 
     private fun showReviewDialog() {
         val dialog = ReviewDialog(this, object : ReviewDialog.ReviewSubmitListener {
