@@ -88,7 +88,6 @@ class HomeActivity : AppCompatActivity() {
 
 
 
-
     private fun loadFragment(fragment: Fragment) {
         findViewById<TextView>(R.id.hello_text).visibility = View.GONE
         findViewById<FragmentContainerView>(R.id.fragment_container).visibility = View.VISIBLE
@@ -97,6 +96,7 @@ class HomeActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
+
 
 
 

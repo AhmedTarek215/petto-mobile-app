@@ -1,13 +1,17 @@
 package com.example.petto.ui.SignUp
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.petto.R
 import com.example.petto.SignUpProgressBar
 import com.example.petto.data.viewModel.SignUpViewModel
+import com.google.firebase.firestore.FirebaseFirestore
+import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -21,7 +25,10 @@ class SignUp3 : AppCompatActivity() {
     private lateinit var btnBack: Button
     private lateinit var btnNext: Button
     private lateinit var genderError: TextView
+    private lateinit var profileImage: CircleImageView
+    private lateinit var btnImportPhoto: ImageView
 
+    private var selectedPetImageUrl: String? = null
     private val calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +44,8 @@ class SignUp3 : AppCompatActivity() {
         btnBack = findViewById(R.id.btnBack)
         btnNext = findViewById(R.id.btnNext)
         genderError = findViewById(R.id.genderError)
+        profileImage = findViewById(R.id.profileImage)
+        btnImportPhoto = findViewById(R.id.btnImportPhoto)
 
         val step = intent.getIntExtra("progress", 3)
         progressBar.setProgress(if (step > 3) 3 else step)
@@ -55,6 +64,10 @@ class SignUp3 : AppCompatActivity() {
                 radioMale.isChecked = false
                 genderError.visibility = TextView.GONE
             }
+        }
+
+        btnImportPhoto.setOnClickListener {
+            showPetImageSelectionDialog()
         }
 
         btnBack.setOnClickListener {
@@ -83,6 +96,48 @@ class SignUp3 : AppCompatActivity() {
         }, year, month, day)
 
         datePickerDialog.show()
+    }
+
+    private fun showPetImageSelectionDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_profile_image_selector, null)
+        val gridLayout = dialogView.findViewById<GridLayout>(R.id.imageGrid)
+
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Select Pet Image")
+            .setView(dialogView)
+            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+
+        val dialog = builder.create()
+        dialog.show()
+
+        FirebaseFirestore.getInstance().collection("pet_images")
+            .get()
+            .addOnSuccessListener { result ->
+                for (doc in result) {
+                    val url = doc.getString("url") ?: continue
+                    val imageView = ImageView(this).apply {
+                        layoutParams = GridLayout.LayoutParams().apply {
+                            width = 250
+                            height = 250
+                            setMargins(16, 16, 16, 16)
+                        }
+                        scaleType = ImageView.ScaleType.CENTER_CROP
+                    }
+
+                    Glide.with(this).load(url).into(imageView)
+
+                    imageView.setOnClickListener {
+                        selectedPetImageUrl = url
+                        Glide.with(this).load(url).into(profileImage)
+                        dialog.dismiss()
+                    }
+
+                    gridLayout.addView(imageView)
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Could not load pet images", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun validateAndProceed() {
@@ -120,6 +175,7 @@ class SignUp3 : AppCompatActivity() {
         SignUpViewModel.petName = petName
         SignUpViewModel.petGender = gender
         SignUpViewModel.petBirthDate = dob
+        SignUpViewModel.petImageUrl = selectedPetImageUrl
 
         val intent = Intent(this, SignUp4::class.java)
         intent.putExtra("progress", 4)

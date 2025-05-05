@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.example.petto.R
 import com.example.petto.ui.SignUp.SignUp1
+import com.example.petto.ui.post.CreatePostActivity
 import com.example.petto.ui.profiles.PetProfile
 import com.example.petto.ui.profiles.UserProfile
 import com.google.firebase.auth.FirebaseAuth
@@ -71,7 +72,7 @@ class Login : AppCompatActivity() {
 
         tvSignUP.text = spannableString
         tvSignUP.setOnClickListener {
-            startActivity(Intent(this, SignUp1::class.java))
+            startActivity(Intent(this, CreatePostActivity::class.java))
         }
 
         // 🔐 Firebase Login Logic

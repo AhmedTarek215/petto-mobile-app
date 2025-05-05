@@ -17,6 +17,7 @@ import com.example.petto.data.viewModel.SignUpViewModel
 import com.example.petto.ui.Login.Login
 import com.google.android.material.textfield.TextInputLayout
 
+
 class SignUp1 : AppCompatActivity() {
 
     private lateinit var etFirstName: EditText
