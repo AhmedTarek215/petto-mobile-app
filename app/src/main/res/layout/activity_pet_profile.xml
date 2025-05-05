@@ -45,8 +45,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView"
+        <EditText
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -69,7 +69,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.451"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintTop_toBottomOf="@+id/name"
             app:layout_constraintVertical_bias="0.05">
 
             <GridLayout
@@ -103,6 +103,7 @@
                             android:padding="5dp">
 
                             <TextView
+
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="25dp"
@@ -118,12 +119,15 @@
                         </LinearLayout>
 
 
-                        <TextView
+                        <EditText
+                            android:id="@+id/breed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Persian cat"
+                            android:hint="Breed"
+                            android:background="@null"
                             android:textColor="#4F576B"
-                            android:textSize="14sp"
+                            android:textSize="18sp"
                             android:fontFamily="@font/alexandriasemibold"
                             android:layout_marginTop="2dp"/>
                     </LinearLayout>
@@ -168,12 +172,15 @@
                         </LinearLayout>
 
 
-                        <TextView
+                        <EditText
+                            android:id="@+id/gender"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Female"
+                            android:hint="Gender"
+                            android:background="@null"
                             android:textColor="#4F576B"
-                            android:textSize="14sp"
+                            android:textSize="18sp"
                             android:fontFamily="@font/alexandriasemibold"
                             android:layout_marginTop="2dp"/>
                     </LinearLayout>
@@ -220,14 +227,17 @@
                         </LinearLayout>
 
 
-                        <TextView
+                        <EditText
+                            android:id="@+id/age"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="12 months"
+                            android:hint="Age"
+                            android:text="11 months"
+                            android:background="@null"
                             android:textColor="#4F576B"
-                            android:textSize="14sp"
-                            android:fontFamily="@font/alexandriasemibold"
-                            android:layout_marginTop="2dp"/>
+                            android:textSize="18sp"
+                            android:fontFamily="@font/alexandriasemibold"/>
+
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -271,12 +281,15 @@
                         </LinearLayout>
 
 
-                        <TextView
+                        <EditText
+                            android:id="@+id/color"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Cream"
+                            android:background="@null"
+                            android:hint="Color"
                             android:textColor="#4F576B"
-                            android:textSize="14sp"
+                            android:textSize="18sp"
                             android:fontFamily="@font/alexandriasemibold"
                             android:layout_marginTop="2dp"/>
                     </LinearLayout>
@@ -323,12 +336,15 @@
                         </LinearLayout>
 
 
-                        <TextView
+                        <EditText
+                            android:id="@+id/weight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="3.6 KG"
                             android:textColor="#4F576B"
-                            android:textSize="14sp"
+                            android:hint="weight"
+                            android:background="@null"
+                            android:textSize="18sp"
                             android:fontFamily="@font/alexandriasemibold"
                             android:layout_marginTop="2dp"/>
                     </LinearLayout>
@@ -375,12 +391,15 @@
                         </LinearLayout>
 
 
-                        <TextView
+                        <EditText
+                            android:id="@+id/height"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="9 Inches"
+                            android:background="@null"
+                            android:hint="Height"
                             android:textColor="#4F576B"
-                            android:textSize="14sp"
+                            android:textSize="18sp"
                             android:fontFamily="@font/alexandriasemibold"
                             android:layout_marginTop="2dp"/>
                     </LinearLayout>
@@ -389,17 +408,17 @@
             </GridLayout>
         </androidx.cardview.widget.CardView>
 
-        <ImageView
-            android:id="@+id/btnEdit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="178dp"
-            android:padding="4dp"
-            android:src="@drawable/edit"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/profileImageView"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--        <ImageView-->
+<!--            android:id="@+id/btnEdit"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="178dp"-->
+<!--            android:padding="4dp"-->
+<!--            android:src="@drawable/edit"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.0"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/profileImageView"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
