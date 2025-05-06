@@ -131,11 +131,11 @@ class SignUp4 : AppCompatActivity() {
                 val uid = auth.currentUser?.uid ?: return@addOnCompleteListener
                 val userRef = firestore.collection("Users").document(uid)
 
-                val userData = mapOf(
+                val userData = mutableMapOf<String, Any>(
                     "uid" to uid,
                     "firstName" to SignUpViewModel.firstName,
                     "lastName" to SignUpViewModel.lastName,
-                    "age" to  SignUpViewModel.age,
+                    "age" to SignUpViewModel.age,
                     "gender" to SignUpViewModel.gender,
                     "city" to SignUpViewModel.city,
                     "area" to SignUpViewModel.area,
@@ -149,46 +149,59 @@ class SignUp4 : AppCompatActivity() {
                         "breed" to SignUpViewModel.petBreed,
                         "weight" to SignUpViewModel.petWeight,
                         "height" to SignUpViewModel.petHeight,
-                        "color" to SignUpViewModel.petColor
+                        "color" to SignUpViewModel.petColor,
+                        "imageUrl" to SignUpViewModel.petImageUrl
                     )
-                )
 
-                userRef.set(userData).addOnSuccessListener {
-                    Toast.makeText(this, "Signup successful!", Toast.LENGTH_LONG).show()
-                    startActivity(Intent(this, Login::class.java))
-                    finish()
-                }.addOnFailureListener { e ->
-                    Toast.makeText(this, "Firestore Error: ${e.message}", Toast.LENGTH_LONG).show()
+
+                )
+                SignUpViewModel.profileImageUrl?.let { imageUrl ->
+                    userData["profileImageUrl"] = imageUrl
                 }
 
-            } else {
-                Toast.makeText(this, "Signup failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+
+
+                    userRef.set(userData).addOnSuccessListener {
+                        Toast.makeText(this, "Signup successful!", Toast.LENGTH_LONG).show()
+                        startActivity(Intent(this, Login::class.java))
+                        finish()
+                    }.addOnFailureListener { e ->
+                        Toast.makeText(this, "Firestore Error: ${e.message}", Toast.LENGTH_LONG)
+                            .show()
+                    }
+
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Signup failed: ${task.exception?.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
-    }
 
 
-    private fun showSuccessDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Success 🎉")
-        builder.setMessage("Your account has been created successfully!")
-        builder.setCancelable(false)
-        builder.setPositiveButton("OK") { dialog, _ ->
-            dialog.dismiss()
-            val intent = Intent(this, Login::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
+        private fun showSuccessDialog() {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Success 🎉")
+            builder.setMessage("Your account has been created successfully!")
+            builder.setCancelable(false)
+            builder.setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+                val intent = Intent(this, Login::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+            }
+            builder.show()
         }
-        builder.show()
-    }
 
-    private fun showErrorDialog(message: String) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Signup Failed ❌")
-        builder.setMessage(message)
-        builder.setCancelable(true)
-        builder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-        builder.show()
+        private fun showErrorDialog(message: String) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Signup Failed ❌")
+            builder.setMessage(message)
+            builder.setCancelable(true)
+            builder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            builder.show()
+        }
     }
-}

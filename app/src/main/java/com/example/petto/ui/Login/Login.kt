@@ -17,8 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.example.petto.R
 import com.example.petto.ui.SignUp.SignUp1
-import com.example.petto.ui.post.CreatePostActivity
-//import com.example.petto.ui.post.PostListActivity
 import com.example.petto.ui.profiles.PetProfile
 import com.example.petto.ui.profiles.UserProfile
 import com.google.firebase.auth.FirebaseAuth
@@ -73,7 +71,7 @@ class Login : AppCompatActivity() {
 
         tvSignUP.text = spannableString
         tvSignUP.setOnClickListener {
-            startActivity(Intent(this, CreatePostActivity::class.java))
+            startActivity(Intent(this, SignUp1::class.java))
         }
 
         // 🔐 Firebase Login Logic
@@ -90,7 +88,7 @@ class Login : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this, CreatePostActivity::class.java))
+                        startActivity(Intent(this, UserProfile::class.java))
                         finish()
                     } else {
                         Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()

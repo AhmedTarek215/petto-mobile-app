@@ -9,5 +9,9 @@ data class User(
     val city: String = "",
     val area: String = "",
     val street: String = "",
-    val email: String = ""
-)
+    val email: String = "",
+    var profileImageUrl: String? = null
+    ,
+
+
+    )
