@@ -1,22 +1,23 @@
 package com.example.petto.ui.profiles
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.petto.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import de.hdodenhof.circleimageview.CircleImageView
 
 class UserProfile : AppCompatActivity() {
 
     private lateinit var userNameTextView: TextView
     private lateinit var userEmailTextView: TextView
-    private lateinit var profileImageView: ImageView
+    private lateinit var profileImageView: CircleImageView
 
     private lateinit var btnMyPets: LinearLayout
     private lateinit var btnSaved: LinearLayout
@@ -32,7 +33,7 @@ class UserProfile : AppCompatActivity() {
     private lateinit var fabAdd: ImageView
 
     private lateinit var firestore: FirebaseFirestore
-    private var userId: String = ""
+    private lateinit var userId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,26 +63,13 @@ class UserProfile : AppCompatActivity() {
             loadUserData()
         }
 
-        profileImageView.setOnClickListener {
-            showAvatarPicker()
-        }
-
         btnMyPets.setOnClickListener {
             startActivity(Intent(this, PetProfile::class.java))
         }
 
-        // Navigation placeholders
-        btnSaved.setOnClickListener { }
-        btnMyPosts.setOnClickListener { }
-        btnPrivacy.setOnClickListener { }
-        btnHelp.setOnClickListener { }
-        btnAboutUs.setOnClickListener { }
-
-        navHome.setOnClickListener { }
-        navCalendar.setOnClickListener { }
-        navNotifications.setOnClickListener { }
-        navProfile.setOnClickListener { }
-        fabAdd.setOnClickListener { }
+        profileImageView.setOnClickListener {
+            showAvatarSelectionDialog()
+        }
     }
 
     private fun loadUserData() {
@@ -91,25 +79,29 @@ class UserProfile : AppCompatActivity() {
                     userNameTextView.text = document.getString("firstName") ?: ""
                     userEmailTextView.text = document.getString("email") ?: ""
 
-                    val avatarId = document.getString("avatar")
+                    val avatarId = document.getString("avatarId")
                     if (!avatarId.isNullOrEmpty()) {
-                        loadAvatarImage(avatarId)
+                        loadAvatarFromFirestore(avatarId)
                     } else {
                         profileImageView.setImageResource(R.drawable.profile)
                     }
                 }
             }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show()
+                profileImageView.setImageResource(R.drawable.profile)
+            }
     }
 
-    private fun loadAvatarImage(avatarId: String) {
+    private fun loadAvatarFromFirestore(avatarId: String) {
         firestore.collection("profile_images").document(avatarId).get()
-            .addOnSuccessListener { avatarDoc ->
-                val base64 = avatarDoc.getString("url")
+            .addOnSuccessListener { doc ->
+                val base64 = doc.getString("url")
                 if (!base64.isNullOrEmpty()) {
                     try {
-                        val pureBase64 = base64.substringAfter(",")
-                        val imageBytes = Base64.decode(pureBase64, Base64.DEFAULT)
-                        val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                        val imageData = base64.substringAfter("base64,", "")
+                        val decoded = Base64.decode(imageData, Base64.DEFAULT)
+                        val bitmap = BitmapFactory.decodeByteArray(decoded, 0, decoded.size)
                         profileImageView.setImageBitmap(bitmap)
                     } catch (e: Exception) {
                         profileImageView.setImageResource(R.drawable.profile)
@@ -123,56 +115,53 @@ class UserProfile : AppCompatActivity() {
             }
     }
 
-    private fun showAvatarPicker() {
-        firestore.collection("profile_images").get()
-            .addOnSuccessListener { snapshot ->
-                val avatarDocs = snapshot.documents
-                if (avatarDocs.isEmpty()) return@addOnSuccessListener
+    private fun showAvatarSelectionDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_profile_image_selector, null)
+        val gridLayout = dialogView.findViewById<GridLayout>(R.id.imageGrid)
 
-                val avatarIds = avatarDocs.map { it.id }
-                val avatarBase64s = avatarDocs.map { it.getString("url") ?: "" }
-                val avatarBitmaps = avatarBase64s.map { base64 ->
-                    try {
-                        val clean = base64.substringAfter(",")
-                        val bytes = Base64.decode(clean, Base64.DEFAULT)
-                        BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                    } catch (e: Exception) {
-                        null
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Select Profile Image")
+            .setView(dialogView)
+            .setNegativeButton("Cancel") { d, _ -> d.dismiss() }
+            .create()
+
+        dialog.show()
+
+        FirebaseFirestore.getInstance().collection("profile_images")
+            .get()
+            .addOnSuccessListener { result ->
+                var index = 0
+                for (doc in result) {
+                    val url = doc.getString("url") ?: continue
+                    val imageView = ImageView(this)
+
+                    val params = GridLayout.LayoutParams().apply {
+                        width = 250
+                        height = 250
+                        rowSpec = GridLayout.spec(index / 3)  // 3 per row
+                        columnSpec = GridLayout.spec(index % 3)
+                        setMargins(16, 16, 16, 16)
                     }
-                }
 
-                val imageViews = avatarBitmaps.map { bmp ->
-                    val img = ImageView(this)
-                    img.setImageBitmap(bmp)
-                    img.layoutParams = LinearLayout.LayoutParams(150, 150).apply {
-                        setMargins(20, 20, 20, 20)
-                    }
-                    img
-                }
+                    imageView.layoutParams = params
+                    imageView.scaleType = ImageView.ScaleType.CENTER_CROP
 
-                val layout = LinearLayout(this).apply {
-                    orientation = LinearLayout.HORIZONTAL
-                    setPadding(20, 20, 20, 20)
-                }
+                    Glide.with(this).load(url).into(imageView)
 
-                imageViews.forEachIndexed { index, img ->
-                    layout.addView(img)
-                    img.setOnClickListener {
-                        val selectedAvatarId = avatarIds[index]
+                    imageView.setOnClickListener {
+                        Glide.with(this).load(url).into(profileImageView)
                         firestore.collection("Users").document(userId)
-                            .update("avatar", selectedAvatarId)
-                            .addOnSuccessListener {
-                                loadAvatarImage(selectedAvatarId)
-                                Toast.makeText(this, "Avatar updated", Toast.LENGTH_SHORT).show()
-                            }
+                            .update("avatarId", doc.id)
+                        dialog.dismiss()
                     }
-                }
 
-                AlertDialog.Builder(this)
-                    .setTitle("Choose Your Avatar")
-                    .setView(layout)
-                    .setNegativeButton("Cancel", null)
-                    .show()
+                    gridLayout.addView(imageView)
+                    index++
+                }
+            }
+
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to load avatars", Toast.LENGTH_SHORT).show()
             }
     }
 }

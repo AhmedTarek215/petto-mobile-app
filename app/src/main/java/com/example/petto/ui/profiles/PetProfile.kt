@@ -1,13 +1,14 @@
 package com.example.petto.ui.profiles
 
+import android.app.AlertDialog
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.petto.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,17 +21,16 @@ class PetProfile : AppCompatActivity() {
     private lateinit var colorEditText: EditText
     private lateinit var weightEditText: EditText
     private lateinit var heightEditText: EditText
-    private lateinit var profileImageView: ImageView
-    private lateinit var btnEdit: ImageView
+    private lateinit var profileImageView: CircleImageView
+//    private lateinit var btnImportPetPhoto: ImageView
 
     private lateinit var firestore: FirebaseFirestore
     private var userId: String = ""
+    private var selectedImageUrl: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val layoutId = resources.getIdentifier("activity_pet_profile", "layout", packageName)
-        setContentView(layoutId)
+        setContentView(R.layout.activity_pet_profile)
 
         firestore = FirebaseFirestore.getInstance()
 
@@ -42,7 +42,7 @@ class PetProfile : AppCompatActivity() {
         weightEditText = findViewById(getResId("weight"))
         heightEditText = findViewById(getResId("height"))
         profileImageView = findViewById(getResId("profileImageView"))
-        btnEdit = findViewById(getResId("btnEdit"))
+//        btnImportPetPhoto = findViewById(R.id.btnImportPetPhoto)
 
         ageEditText.isEnabled = false
 
@@ -53,10 +53,66 @@ class PetProfile : AppCompatActivity() {
         } else {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
         }
-
-        btnEdit.setOnClickListener {
-            updatePetData()
+        profileImageView.setOnClickListener {
+            showPetImageSelectionDialog()
         }
+
+//        btnImportPetPhoto.setOnClickListener {
+//            showPetImageSelectionDialog()
+//        }
+        fun showPetImageSelectionDialog() {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_profile_image_selector, null)
+            val gridLayout = dialogView.findViewById<GridLayout>(R.id.imageGrid)
+
+            val builder = AlertDialog.Builder(this)
+                .setTitle("Select Pet Image")
+                .setView(dialogView)
+                .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+
+            val dialog = builder.create()
+            dialog.show()
+
+            FirebaseFirestore.getInstance().collection("pet_images")
+                .get()
+                .addOnSuccessListener { result ->
+                    for (doc in result) {
+                        val url = doc.getString("url") ?: continue
+                        val imageView = ImageView(this).apply {
+                            layoutParams = GridLayout.LayoutParams().apply {
+                                width = 250
+                                height = 250
+                                setMargins(16, 16, 16, 16)
+                            }
+                            scaleType = ImageView.ScaleType.CENTER_CROP
+                        }
+
+                        Glide.with(this).load(url).into(imageView)
+
+                        imageView.setOnClickListener {
+                            // Update image view
+                            Glide.with(this).load(url).into(profileImageView)
+
+                            // Save imageUrl to Firestore
+                            firestore.collection("Users").document(userId)
+                                .update("pet.imageUrl", url)
+                                .addOnSuccessListener {
+                                    Toast.makeText(this, "Pet image updated!", Toast.LENGTH_SHORT).show()
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(this, "Failed to update image", Toast.LENGTH_SHORT).show()
+                                }
+
+                            dialog.dismiss()
+                        }
+
+                        gridLayout.addView(imageView)
+                    }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Could not load pet images", Toast.LENGTH_SHORT).show()
+                }
+        }
+
     }
 
     private fun loadPetData() {
@@ -66,9 +122,17 @@ class PetProfile : AppCompatActivity() {
                 if (document.exists()) {
                     val pet = document.get("pet") as? Map<*, *>
                     if (pet != null) {
-                        nameEditText.setText(document.getString("firstName"))
+                        nameEditText.setText(pet["name"]?.toString())
                         breedEditText.setText(pet["breed"]?.toString())
                         genderEditText.setText(document.getString("gender"))
+
+                        val imageUrl = pet["imageUrl"]?.toString()
+                        if (!imageUrl.isNullOrEmpty()) {
+                            selectedImageUrl = imageUrl
+                            Glide.with(this).load(imageUrl).into(profileImageView)
+                        } else {
+                            profileImageView.setImageResource(R.drawable.profile)
+                        }
 
                         val dob = pet["dob"]?.toString()
                         if (!dob.isNullOrEmpty()) {
@@ -92,22 +156,48 @@ class PetProfile : AppCompatActivity() {
             }
     }
 
-    private fun updatePetData() {
-        val updatedPet = hashMapOf(
-            "breed" to breedEditText.text.toString(),
-            "color" to colorEditText.text.toString(),
-            "dob" to "", // keep dob unchanged unless editable
-            "weight" to weightEditText.text.toString(),
-            "height" to heightEditText.text.toString()
-        )
+    private fun showPetImageSelectionDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_profile_image_selector, null)
+        val gridLayout = dialogView.findViewById<GridLayout>(R.id.imageGrid)
 
-        firestore.collection("Users").document(userId)
-            .update("pet", updatedPet)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Pet info updated!", Toast.LENGTH_SHORT).show()
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Select Pet Image")
+            .setView(dialogView)
+            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+
+        val dialog = builder.create()
+        dialog.show()
+
+        firestore.collection("pet_images")
+            .get()
+            .addOnSuccessListener { result ->
+                for (doc in result) {
+                    val url = doc.getString("url") ?: continue
+                    val imageView = ImageView(this).apply {
+                        layoutParams = GridLayout.LayoutParams().apply {
+                            width = 250
+                            height = 250
+                            setMargins(16, 16, 16, 16)
+                        }
+                        scaleType = ImageView.ScaleType.CENTER_CROP
+                    }
+
+                    Glide.with(this).load(url).into(imageView)
+
+                    imageView.setOnClickListener {
+                        selectedImageUrl = url
+                        Glide.with(this).load(url).into(profileImageView)
+
+                        firestore.collection("Users").document(userId)
+                            .update("pet.imageUrl", url)
+                        dialog.dismiss()
+                    }
+
+                    gridLayout.addView(imageView)
+                }
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Update failed: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Could not load images.", Toast.LENGTH_SHORT).show()
             }
     }
 
