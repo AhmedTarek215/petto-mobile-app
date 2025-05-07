@@ -14,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import de.hdodenhof.circleimageview.CircleImageView
 
 class UserProfile : AppCompatActivity() {
-
+//
     private lateinit var userNameTextView: TextView
     private lateinit var userEmailTextView: TextView
     private lateinit var profileImageView: CircleImageView

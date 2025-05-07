@@ -57,7 +57,7 @@ class PetProfile : AppCompatActivity() {
             showPetImageSelectionDialog()
         }
 
-//        btnImportPetPhoto.setOnClickListener {
+//        btnImportPetPhoto.setOnClickListener  {
 //            showPetImageSelectionDialog()
 //        }
         fun showPetImageSelectionDialog() {
