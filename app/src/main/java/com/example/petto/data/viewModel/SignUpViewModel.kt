@@ -13,7 +13,8 @@ object SignUpViewModel {
     var street = ""
     var email = ""
     var password = ""
-    //    var profileImageUri: String = ""
+    var profileImageUrl: String? = null
+    //pet
     var petName: String = ""
     var petGender: String = ""
     var petBirthDate: String = ""
@@ -22,6 +23,7 @@ object SignUpViewModel {
     var petWeight: String = ""
     var petHeight: String = ""
     var petColor: String = ""
+    var petImageUrl: String? = null
 
     fun toUser(userId: String): User {
         return User(

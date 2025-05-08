@@ -1,19 +1,23 @@
 package com.example.petto.ui.SignUp
 
-
-
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
+import android.view.LayoutInflater
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.petto.R
 import com.example.petto.SignUpProgressBar
 import com.example.petto.data.viewModel.SignUpViewModel
+import com.google.firebase.firestore.FirebaseFirestore
+import de.hdodenhof.circleimageview.CircleImageView
 
 class SignUp2 : AppCompatActivity() {
 
+    private lateinit var profileImage: CircleImageView
+    private lateinit var btnImportPhoto: ImageView
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var etConfirmPassword: EditText
@@ -25,12 +29,15 @@ class SignUp2 : AppCompatActivity() {
 
     private var isPasswordVisible = false
     private var isConfirmPasswordVisible = false
+    private var selectedImageUrl: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up2)
 
-        // Initialize views
+        // Init views
+        profileImage = findViewById(R.id.profileImage)
+        btnImportPhoto = findViewById(R.id.btnImportPhoto)
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         etConfirmPassword = findViewById(R.id.etConfirmPassword)
@@ -42,6 +49,10 @@ class SignUp2 : AppCompatActivity() {
 
         val step = intent.getIntExtra("progress", 2)
         progressBar.setProgress(step)
+
+        btnImportPhoto.setOnClickListener {
+            showImageSelectionDialog()
+        }
 
         passwordToggle.setOnClickListener {
             isPasswordVisible = !isPasswordVisible
@@ -64,6 +75,7 @@ class SignUp2 : AppCompatActivity() {
             if (validateFields()) {
                 SignUpViewModel.email = etEmail.text.toString().trim()
                 SignUpViewModel.password = etPassword.text.toString().trim()
+                SignUpViewModel.profileImageUrl = selectedImageUrl
 
                 val intent = Intent(this, SignUp3::class.java)
                 intent.putExtra("progress", step + 1)
@@ -94,9 +106,7 @@ class SignUp2 : AppCompatActivity() {
         if (email.isEmpty()) {
             etEmail.error = "Email is required"
             isValid = false
-        }
-
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             etEmail.error = "Enter a valid email"
             isValid = false
         }
@@ -104,9 +114,7 @@ class SignUp2 : AppCompatActivity() {
         if (password.isEmpty()) {
             etPassword.error = "Password is required"
             isValid = false
-        }
-
-        if (password.length < 6) {
+        } else if (password.length < 6) {
             etPassword.error = "Password must be at least 6 characters"
             isValid = false
         }
@@ -114,13 +122,57 @@ class SignUp2 : AppCompatActivity() {
         if (confirmPassword.isEmpty()) {
             etConfirmPassword.error = "Confirm your password"
             isValid = false
-        }
-
-        if (password != confirmPassword) {
+        } else if (password != confirmPassword) {
             etConfirmPassword.error = "Passwords do not match"
             isValid = false
         }
 
         return isValid
     }
+
+    private fun showImageSelectionDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_profile_image_selector, null)
+        val gridLayout = dialogView.findViewById<GridLayout>(R.id.imageGrid)
+
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Select Profile Image")
+            .setView(dialogView)
+            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+
+        val dialog = builder.create()
+        dialog.show()
+
+        FirebaseFirestore.getInstance().collection("profile_images")
+            .get()
+            .addOnSuccessListener { result ->
+                for (doc in result) {
+                    val url = doc.getString("url") ?: continue
+                    val imageView = ImageView(this).apply {
+                        layoutParams = GridLayout.LayoutParams().apply {
+                            width = 250
+                            height = 250
+                            setMargins(16, 16, 16, 16)
+                        }
+                        scaleType = ImageView.ScaleType.CENTER_CROP
+                    }
+
+                    Glide.with(this).load(url).into(imageView)
+
+                    imageView.setOnClickListener {
+                        selectedImageUrl = url
+                        Glide.with(this).load(url).into(profileImage)
+                        dialog.dismiss()
+                    }
+
+                    gridLayout.addView(imageView)
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Could not load images.", Toast.LENGTH_SHORT).show()
+            }
+    }
+
 }
+
+
+
