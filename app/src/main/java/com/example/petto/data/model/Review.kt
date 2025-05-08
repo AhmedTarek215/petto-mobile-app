@@ -15,6 +15,6 @@ data class ReviewUser(
     val user_id: String = "",
     val fname: String = "",
     val lname: String = "",
-    val user_img: String = ""
+    val profileImageUrl: String = ""
 )
 
