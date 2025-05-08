@@ -103,6 +103,22 @@ class PostAdapter(private var posts: List<Post>) : RecyclerView.Adapter<PostAdap
                                 holder.likeButton.setImageResource(R.drawable.heart_filled)
                                 holder.likeCountText.text = newLikes.toString()
                                 Toast.makeText(holder.itemView.context, "Liked!", Toast.LENGTH_SHORT).show()
+                                firestore.collection("Users").document(userId).get()
+                                    .addOnSuccessListener { userDoc ->
+                                        val fullName = "${userDoc.getString("firstName") ?: ""} ${userDoc.getString("lastName") ?: ""}".trim()
+                                        val profileImageUrl = userDoc.getString("profileImageUrl") ?: ""
+
+                                        if (userId != post.userId) {
+                                            sendLikeNotification(
+                                                postOwnerId = post.userId,
+                                                currentUserId = userId,
+                                                postId = post.id,
+                                                currentUserName = fullName,
+                                                profileImageUrl = profileImageUrl
+                                            )
+                                        }
+                                    }
+
                             }
                         }
                     } else {
@@ -166,6 +182,28 @@ class PostAdapter(private var posts: List<Post>) : RecyclerView.Adapter<PostAdap
                 Toast.makeText(holder.itemView.context, "Invalid Post ID", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+    private fun sendLikeNotification(
+        postOwnerId: String,
+        currentUserId: String,
+        postId: String,
+        currentUserName: String,
+        profileImageUrl: String?
+    ) {
+        val db = FirebaseFirestore.getInstance()
+        val notificationData = hashMapOf(
+            "type" to "like",
+            "text" to "$currentUserName liked your post",
+            "timestamp" to com.google.firebase.Timestamp.now(),
+            "senderId" to currentUserId,
+            "postId" to postId,
+            "profileImage" to profileImageUrl
+        )
+
+        db.collection("notifications")
+            .document(postOwnerId)
+            .collection("items")
+            .add(notificationData)
     }
 
     override fun getItemCount(): Int = posts.size

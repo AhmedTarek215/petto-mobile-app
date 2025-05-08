@@ -63,7 +63,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!--    &lt;!&ndash; Include your custom navigation bar layout &ndash;&gt;-->
+    <!--    &lt; !&ndash; Include your custom navigation bar layout &ndash;&gt;-->
     <!--    <include-->
     <!--        android:id="@+id/custom_bottom_nav"-->
     <!--        layout="@layout/custom_bottom_nav"-->
