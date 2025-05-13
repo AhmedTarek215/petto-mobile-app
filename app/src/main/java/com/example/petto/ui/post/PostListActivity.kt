@@ -52,6 +52,11 @@ class PostListActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
             }
     }
+    override fun onResume() {
+        super.onResume()
+        loadPosts() // ✅ Refresh the post list when returning from EditPostActivity
+    }
+
 
 
 }
