@@ -1,5 +1,6 @@
 package com.example.petto.ui.post
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
 import com.example.petto.R
 import com.example.petto.data.model.Post
@@ -42,8 +44,10 @@ class PostAdapter(private var posts: List<Post>) : RecyclerView.Adapter<PostAdap
         return PostViewHolder(view)
     }
 
+    @SuppressLint("CutPasteId")
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = posts[position]
+        holder.itemView.findViewById<ImageView>(R.id.menuButton).visibility = View.GONE
 
         holder.username.text = post.username.ifEmpty { "Unknown" }
 
@@ -79,6 +83,8 @@ class PostAdapter(private var posts: List<Post>) : RecyclerView.Adapter<PostAdap
         val currentUser = FirebaseAuth.getInstance().currentUser
         val postId = post.id
         val userId = currentUser?.uid
+        val menuButton = holder.itemView.findViewById<ImageView>(R.id.menuButton)
+
 
         if (postId.isNotEmpty() && userId != null) {
             val postRef = firestore.collection("posts").document(postId)
@@ -169,7 +175,59 @@ class PostAdapter(private var posts: List<Post>) : RecyclerView.Adapter<PostAdap
                 }
                 dialog.show()
             }
+
+            //menu
+            if (userId == post.userId) {
+                menuButton.visibility = View.VISIBLE
+                menuButton.setOnClickListener {
+                    val popup = android.widget.PopupMenu(holder.itemView.context, menuButton)
+                    popup.inflate(R.menu.post_item_menu)
+
+                    popup.setOnMenuItemClickListener { item ->
+                        when (item.itemId) {
+                            R.id.action_edit -> {
+                                val context = holder.itemView.context
+                                val intent = Intent(context, EditPostActivity::class.java)
+                                intent.putExtra("postId", post.id)
+                                context.startActivity(intent)
+                                true
+                            }
+                            R.id.action_delete -> {
+                                AlertDialog.Builder(holder.itemView.context)
+                                    .setTitle("Delete Post")
+                                    .setMessage("Are you sure you want to delete this post?")
+                                    .setPositiveButton("Delete") { _, _ ->
+                                        firestore.collection("posts").document(post.id)
+                                            .delete()
+                                            .addOnSuccessListener {
+                                                Toast.makeText(holder.itemView.context, "Post deleted", Toast.LENGTH_SHORT).show()
+                                                // Optional: Remove from list and refresh UI
+                                                val mutableList = posts.toMutableList()
+                                                mutableList.removeAt(holder.adapterPosition)
+                                                updatePosts(mutableList)
+                                            }
+                                            .addOnFailureListener {
+                                                Toast.makeText(holder.itemView.context, "Failed to delete post", Toast.LENGTH_SHORT).show()
+                                            }
+                                    }
+                                    .setNegativeButton("Cancel", null)
+                                    .show()
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                    popup.show()
+                }
+            } else {
+                menuButton.visibility = View.GONE
+            }
+
         }
+
+
+
+
         holder.commentCountText.text = post.commentsCount.toString()
 
 
@@ -182,6 +240,9 @@ class PostAdapter(private var posts: List<Post>) : RecyclerView.Adapter<PostAdap
                 Toast.makeText(holder.itemView.context, "Invalid Post ID", Toast.LENGTH_SHORT).show()
             }
         }
+
+
+
     }
     private fun sendLikeNotification(
         postOwnerId: String,

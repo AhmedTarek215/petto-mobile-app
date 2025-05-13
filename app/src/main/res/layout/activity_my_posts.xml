@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1BBCB6">
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/myPostsToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1BBCB6"
+        android:title="My Posts"
+        android:titleTextColor="#000"
+        android:navigationIcon="@drawable/back" />
+
+    <!-- Content -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- RecyclerView for posts -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewMyPosts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp" />
+
+        <!-- Loading Spinner -->
+        <ProgressBar
+            android:id="@+id/progressBarMyPosts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <!-- Empty state message -->
+        <TextView
+            android:id="@+id/emptyStateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ready to create your first post ?"
+            android:textSize="22dp"
+            android:textColor="#FFFFFF"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="300dp"
+            android:layout_alignParentTop="true"
+            android:visibility="gone"
+            tools:ignore="HardcodedText" />
+
+        <!-- Create Post Button -->
+        <Button
+            android:id="@+id/createFirstPostBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start posting..."
+            android:backgroundTint="#1BBCB6"
+            android:textColor="@color/progress_active"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_below="@id/emptyStateText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:visibility="gone" />
+    </RelativeLayout>
+</LinearLayout>
