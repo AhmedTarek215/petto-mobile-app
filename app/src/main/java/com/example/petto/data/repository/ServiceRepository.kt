@@ -3,13 +3,13 @@ package com.example.petto.data.repository
 import com.example.petto.data.model.PetService
 import com.example.petto.data.model.Review
 import com.example.petto.data.model.ReviewUser
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.firestore.Query
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class ServiceRepository {
 
@@ -53,7 +53,7 @@ class ServiceRepository {
                 user_id = user.uid,
                 fname = userData.getString("fname") ?: "",
                 lname = userData.getString("lname") ?: "",
-                user_img = userData.getString("user_img") ?: ""
+                profileImageUrl = userData.getString("profileImageUrl") ?: ""
             )
 
             val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())

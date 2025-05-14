@@ -11,7 +11,8 @@ import com.example.petto.R
 import com.example.petto.data.model.Review
 import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class ReviewsAdapter(private val reviewList: List<Review>) :
@@ -41,7 +42,7 @@ class ReviewsAdapter(private val reviewList: List<Review>) :
         // 🛠 Now using the timestamp field directly
         holder.reviewTime.text = getTimeAgo(review.timestamp)
 
-        val imageUrl = review.user.user_img
+        val imageUrl = review.user.profileImageUrl
         if (!imageUrl.isNullOrEmpty()) {
             Glide.with(holder.itemView.context)
                 .load(imageUrl)

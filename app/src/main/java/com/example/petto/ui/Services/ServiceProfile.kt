@@ -4,7 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
@@ -52,6 +55,10 @@ class ServiceProfile : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
 
     private var selectedServiceId: String = ""
+    private lateinit var loadingIndicator: ProgressBar
+    private lateinit var contentLayout: LinearLayout
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,6 +108,10 @@ class ServiceProfile : AppCompatActivity() {
         ratingBar = findViewById(R.id.ratingBar)
         averageRatingText = findViewById(R.id.ratingValue)
         addReviewIcon = findViewById(R.id.add)
+        loadingIndicator = findViewById(R.id.loadingIndicator)
+        contentLayout = findViewById(R.id.contentLayout)
+
+
     }
 
     private fun setupAdapters() {
@@ -117,6 +128,10 @@ class ServiceProfile : AppCompatActivity() {
     private fun loadServiceData(serviceId: String) {
         lifecycleScope.launch {
             try {
+                loadingIndicator.visibility = View.VISIBLE
+                contentLayout.visibility = View.GONE
+
+
                 // Load service details
                 db.collection("services").document(serviceId).get()
                     .addOnSuccessListener { document ->
@@ -141,10 +156,17 @@ class ServiceProfile : AppCompatActivity() {
                         } else {
                             showError("Service not found")
                         }
+                        loadingIndicator.visibility = View.GONE
+                        contentLayout.visibility = View.VISIBLE
+
                     }
                     .addOnFailureListener {
                         showError("Failed to load service details.")
+                        loadingIndicator.visibility = View.GONE
+                        contentLayout.visibility = View.VISIBLE
+
                     }
+
 
                 // Load reviews
                 db.collection("services").document(serviceId)
@@ -164,7 +186,7 @@ class ServiceProfile : AppCompatActivity() {
                                     user_id = userMap["user_id"] as? String ?: "",
                                     fname = userMap["fname"] as? String ?: "",
                                     lname = userMap["lname"] as? String ?: "",
-                                    user_img = ""
+                                    profileImageUrl = userMap["profileImageUrl"] as? String ?: ""
                                 )
                             } else {
                                 ReviewUser()
@@ -188,14 +210,14 @@ class ServiceProfile : AppCompatActivity() {
                         reviewsList.addAll(reviews)
                         reviewsAdapter.notifyDataSetChanged()
 
-                        // ✅ Calculate and display average rating
+                        //Calculate and display average rating
                         val totalRating = reviews.sumOf { it.rating.toDouble() }
                         val averageRating = if (reviews.isNotEmpty()) totalRating / reviews.size else 0.0
 
                         ratingBar.rating = averageRating.toFloat()
                         averageRatingText.text = String.format("%.1f", averageRating)
 
-                        // ✅ Update the average rating in Firestore
+                        //Update the average rating in Firestore
                         db.collection("services")
                             .document(serviceId)
                             .update("average_rating", averageRating)
@@ -223,20 +245,25 @@ class ServiceProfile : AppCompatActivity() {
                 val user = auth.currentUser ?: return
                 val userId = user.uid
 
-                db.collection("users").document(userId).get()
+                loadingIndicator.visibility = View.VISIBLE
+                contentLayout.visibility = View.GONE
+
+
+                db.collection("Users").document(userId).get()
                     .addOnSuccessListener { userDoc ->
-                        val fname = userDoc.getString("fname") ?: ""
-                        val lname = userDoc.getString("lname") ?: ""
+                        val fname = userDoc.getString("firstName") ?: ""
+                        val lname = userDoc.getString("lastName") ?: ""
+                        val profileImageUrl = userDoc.getString("profileImageUrl") ?: ""
 
                         val reviewData = hashMapOf(
                             "rating" to rating.toDouble(),
                             "text" to (text ?: ""),
-                            "timestamp" to Timestamp.now(), // Native Firestore Timestamp!
+                            "timestamp" to Timestamp.now(),
                             "user" to hashMapOf(
                                 "user_id" to userId,
                                 "fname" to fname,
-                                "lname" to lname
-                                // No user_img for now
+                                "lname" to lname,
+                                "profileImageUrl" to profileImageUrl
                             )
                         )
 
@@ -247,18 +274,32 @@ class ServiceProfile : AppCompatActivity() {
                             .addOnSuccessListener {
                                 Toast.makeText(this@ServiceProfile, "Review submitted!", Toast.LENGTH_SHORT).show()
                                 loadServiceData(selectedServiceId) // Refresh reviews
+                                loadingIndicator.visibility = View.GONE
+                                contentLayout.visibility = View.VISIBLE
+
                             }
                             .addOnFailureListener {
                                 showError("Failed to submit review.")
+                                loadingIndicator.visibility = View.GONE
+                                contentLayout.visibility = View.VISIBLE
+
                             }
                     }
                     .addOnFailureListener {
                         showError("Failed to fetch user info.")
+                        loadingIndicator.visibility = View.GONE
+                        contentLayout.visibility = View.VISIBLE
+
                     }
+
+
+
             }
         })
         dialog.show()
     }
+
+
 
     private fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
