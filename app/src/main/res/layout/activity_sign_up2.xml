@@ -70,14 +70,15 @@
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_marginTop="16dp"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:clipToPadding="false"
-            app:layout_constraintTop_toBottomOf="@id/btnImportPhoto"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:listitem="@layout/item_profile_image"
-            android:orientation="horizontal"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnImportPhoto"
+            tools:ignore="SpeakableTextPresentCheck"
+            tools:listitem="@layout/item_profile_image" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -107,6 +108,8 @@
                 android:autofillHints="email"
                 android:background="@drawable/edittext_outline"
                 android:hint="Email"
+                android:fontFamily="@font/alexandriaregular"
+                android:textColor="#4F576B"
                 android:imeOptions="actionNext"
                 android:inputType="textEmailAddress"
                 android:padding="11dp"
@@ -142,6 +145,8 @@
                     android:autofillHints="password"
                     android:background="@android:color/transparent"
                     android:hint="Password"
+                    android:fontFamily="@font/alexandriaregular"
+                    android:textColor="#4F576B"
                     android:imeOptions="actionNext"
                     android:inputType="textPassword"
                     android:padding="11dp"
@@ -189,6 +194,8 @@
                     android:hint="Confirm Password"
                     android:imeOptions="actionNext"
                     android:inputType="textPassword"
+                    android:fontFamily="@font/alexandriaregular"
+                    android:textColor="#4F576B"
                     android:padding="11dp"
                     android:textColorHint="#A9A9A9"
                     tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />

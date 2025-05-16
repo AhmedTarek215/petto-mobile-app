@@ -36,23 +36,22 @@
 
     <ImageView
         android:id="@+id/base"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="72dp"
         android:src="@drawable/base1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/title" />
 
     <ImageView
         android:id="@+id/intro_image"
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:layout_marginTop="28dp"
-        android:src="@drawable/pet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        android:src="@drawable/post"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/base" />
 
@@ -75,6 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="76dp"
+        android:layout_marginHorizontal="7dp"
         android:fontFamily="@font/alexandriaregular"
         android:gravity="center"
         android:text="Lorem ipsum dolor sit amet,consectetur adipiscing elit, sed do eiusmodtempor incididunt ut labore et dolore magnaaliqua. Ut enim ad minim veniam, quis nostrud exercitation"

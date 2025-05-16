@@ -83,14 +83,14 @@
             </LinearLayout>
 
             <!-- Place this inside the ScrollView > LinearLayout in activity_calendar.xml -->
-            <!--<androidx.recyclerview.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reminderRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="32dp"
                 android:nestedScrollingEnabled="false"
-                tools:listitem="@layout/item_reminder" />-->
+                tools:listitem="@layout/item_reminder" />
 
         </LinearLayout>
     </ScrollView>
