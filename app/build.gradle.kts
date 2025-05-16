@@ -59,6 +59,7 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("com.google.android.material:material:1.9.0")
 
+    implementation ("androidx.work:work-runtime-ktx:2.9.0")
     implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
