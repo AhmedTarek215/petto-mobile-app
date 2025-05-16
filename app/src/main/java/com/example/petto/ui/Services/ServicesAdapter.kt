@@ -32,21 +32,28 @@ class ServicesAdapter(
         val service = serviceList[position]
 
         holder.name.text = service.name
-        //holder.rating.text = service.rating.toString()
+        holder.rating.text = String.format("%.1f", service.average_rating)
 
         Glide.with(holder.itemView.context)
+            .asBitmap()
             .load(service.imageUrl)
-            .placeholder(R.drawable.service_image)
-            .into(holder.image)
+            .into(object : com.bumptech.glide.request.target.CustomTarget<android.graphics.Bitmap>() {
+                override fun onResourceReady(resource: android.graphics.Bitmap, transition: com.bumptech.glide.request.transition.Transition<in android.graphics.Bitmap>?) {
+                    val resized = android.graphics.Bitmap.createScaledBitmap(resource, 250, 110, true)
+                    holder.image.setImageBitmap(resized)
+                }
 
-        holder.bookmark.setImageResource(R.drawable.save) // static icon for now
+                override fun onLoadCleared(placeholder: android.graphics.drawable.Drawable?) {
+                    holder.image.setImageDrawable(placeholder)
+                }
+            })
+
+
+        holder.bookmark.setImageResource(R.drawable.save)
 
         holder.itemView.setOnClickListener {
             onClick(service)
         }
-
-        holder.rating.text = String.format("%.1f", service.average_rating)
-
     }
 
     override fun getItemCount(): Int = serviceList.size

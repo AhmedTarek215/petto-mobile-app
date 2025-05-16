@@ -1,6 +1,8 @@
 package com.example.petto.ui.post
 
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -8,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.petto.R
 import com.example.petto.data.model.Post
-import android.view.View
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -17,6 +18,7 @@ class PostListActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
     private lateinit var progressBar: ProgressBar
+    private lateinit var backButton: ImageView
     private val firestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,12 +27,18 @@ class PostListActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.PostsRecyclerView)
         progressBar = findViewById(R.id.loadingProgressBar)
+        backButton = findViewById(R.id.backButton)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         postAdapter = PostAdapter(emptyList())
         recyclerView.adapter = postAdapter
 
         loadPosts()
+
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
     }
     private fun loadPosts() {
         progressBar.visibility = View.VISIBLE

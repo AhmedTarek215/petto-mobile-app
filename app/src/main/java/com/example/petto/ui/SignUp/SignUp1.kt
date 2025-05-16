@@ -1,22 +1,22 @@
 package com.example.petto.ui.SignUp
 
-
-
-
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.graphics.Color
 import android.text.Spanned
-import android.widget.*
+import android.text.style.ForegroundColorSpan
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.petto.R
 import com.example.petto.SignUpProgressBar
 import com.example.petto.data.viewModel.SignUpViewModel
 import com.example.petto.ui.Login.Login
 import com.google.android.material.textfield.TextInputLayout
-
 
 class SignUp1 : AppCompatActivity() {
 
@@ -32,7 +32,6 @@ class SignUp1 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up1)
 
-        // Initialize views
         etFirstName = findViewById(R.id.etFirstName)
         etLastName = findViewById(R.id.etLastName)
         etAge = findViewById(R.id.etAge)
@@ -42,7 +41,6 @@ class SignUp1 : AppCompatActivity() {
         btnNext = findViewById(R.id.btnNext)
         val tvLogin = findViewById<TextView>(R.id.tvLogin)
 
-        // Highlight "Login"
         val text = "Already have an account? Login"
         val spannableString = SpannableString(text)
         val pinkColor = ForegroundColorSpan(Color.parseColor("#D16B78"))
@@ -55,6 +53,17 @@ class SignUp1 : AppCompatActivity() {
 
         findViewById<SignUpProgressBar>(R.id.progressBar).setProgress(1)
 
+        setupCityDropdown()
+        setupGenderDropdown()
+
+        etFirstName.setText(SignUpViewModel.firstName)
+        etLastName.setText(SignUpViewModel.lastName)
+        if (SignUpViewModel.age > 0) etAge.setText(SignUpViewModel.age.toString())
+        spinnerCity.setText(SignUpViewModel.city, false)
+        updateAreaDropdown(SignUpViewModel.city) // populate areas
+        spinnerArea.setText(SignUpViewModel.area, false)
+        spinnerGender.setText(SignUpViewModel.gender, false)
+
         btnNext.setOnClickListener {
             if (validateFields()) {
                 saveUserPage1Data()
@@ -63,9 +72,6 @@ class SignUp1 : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-
-        setupCityDropdown()
-        setupGenderDropdown()
     }
 
     private fun saveUserPage1Data() {
@@ -75,7 +81,7 @@ class SignUp1 : AppCompatActivity() {
         SignUpViewModel.gender = spinnerGender.text.toString().trim()
         SignUpViewModel.city = spinnerCity.text.toString().trim()
         SignUpViewModel.area = spinnerArea.text.toString().trim()
-        SignUpViewModel.street = "" // Add if needed from another input
+        SignUpViewModel.street = ""
     }
 
     private fun validateFields(): Boolean {
