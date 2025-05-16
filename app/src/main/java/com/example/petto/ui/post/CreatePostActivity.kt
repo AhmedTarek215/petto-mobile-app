@@ -22,7 +22,6 @@ import de.hdodenhof.circleimageview.CircleImageView
 class CreatePostActivity : AppCompatActivity() {
 
     private lateinit var editTextPost: EditText
-    private lateinit var btnAttach: ImageView
     private lateinit var btnPost: Button
     private lateinit var btnCancel: Button
     private lateinit var backButton: ImageView
@@ -73,12 +72,7 @@ class CreatePostActivity : AppCompatActivity() {
         backButton.setOnClickListener { finish() }
         btnCancel.setOnClickListener { finish() }
 
-        btnAttach.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "*/*"
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
-            startActivityForResult(intent, 101)
-        }
+
 
         btnPost.setOnClickListener {
             val content = editTextPost.text.toString().trim()

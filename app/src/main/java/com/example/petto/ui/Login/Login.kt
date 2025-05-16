@@ -22,8 +22,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import com.example.petto.HomeActivity
 import com.example.petto.R
+import com.example.petto.ui.HomeActivity
 import com.example.petto.ui.SignUp.SignUp1
 import com.google.firebase.auth.FirebaseAuth
 
