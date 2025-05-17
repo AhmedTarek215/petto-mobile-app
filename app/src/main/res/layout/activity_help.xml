@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FBFBFF"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="start"
+            android:src="@drawable/arrow_left"
+            android:contentDescription="Back"
+            android:padding="4dp" />
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Help"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#1BBCB6"
+            android:layout_marginTop="16dp" />
+
+        <!-- Help Description -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Need help using Petto? Here's a quick guide to get started:\n\n"
+            android:textSize="16sp"
+            android:textColor="#333"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Navigate through the bottom menu to explore posts, services, and your profile.\n\n• Use the '+' button to create a new post.\n\n• Add pet info in your profile to track their health, vaccines, and reminders.\n\n• Access tips and articles from the Tips section to better care for your pet.\n\n• Find pet clinics, shelters, and hotels from the Services section.\n\n• Set reminders for vet appointments or medications from the Calendar.\n\n• For further help, contact us via email at: petto.support@gmail.com"
+            android:textSize="16sp"
+            android:textColor="#555" />
+
+    </LinearLayout>
+</ScrollView>

@@ -9,6 +9,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.petto.R
+import com.example.petto.ui.notification.NotificationActivity
+import com.example.petto.ui.post.CreatePostActivity
 import com.example.petto.ui.post.MyPostsActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -63,7 +65,18 @@ class UserProfile : AppCompatActivity() {
         if (userId.isNotEmpty()) {
             loadUserData()
         }
+        navNotifications.setOnClickListener {
+            startActivity(Intent(this, NotificationActivity::class.java))
+            finish()
+        }
 
+        navProfile.setOnClickListener {
+            // You are already here, so no action needed
+        }
+
+        fabAdd.setOnClickListener {
+            startActivity(Intent(this, CreatePostActivity::class.java))
+        }
         btnMyPets.setOnClickListener {
             startActivity(Intent(this, PetProfile::class.java))
         }
@@ -73,15 +86,26 @@ class UserProfile : AppCompatActivity() {
         }
         btnMyPosts.setOnClickListener {
             startActivity(Intent(this, MyPostsActivity::class.java))
-
         }
+        btnHelp.setOnClickListener {
+            startActivity(Intent(this, HelpActivity::class.java))
+        }
+        btnAboutUs.setOnClickListener {
+            startActivity(Intent(this, AboutUsActivity::class.java))
+        }
+        btnPrivacy.setOnClickListener {
+            startActivity(Intent(this, PrivacyActivity::class.java))
+        }
+
     }
 
     private fun loadUserData() {
         firestore.collection("Users").document(userId).get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    userNameTextView.text = document.getString("firstName") ?: ""
+                    val firstName = document.getString("firstName") ?: ""
+                    val lastName = document.getString("lastName") ?: ""
+                    userNameTextView.text = "$firstName $lastName"
                     userEmailTextView.text = document.getString("email") ?: ""
 
                     val avatarId = document.getString("avatarId")

@@ -3,28 +3,23 @@ package com.example.petto.ui.Login
 
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.text.InputType
-import android.text.SpannableString
-import android.text.Spanned
+import android.text.*
 import android.text.style.ForegroundColorSpan
 import android.text.style.TypefaceSpan
 import android.view.Gravity
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.example.petto.R
-import com.example.petto.ui.HomeActivity
 import com.example.petto.ui.SignUp.SignUp1
+import com.example.petto.ui.post.PostListActivity
+import com.example.petto.ui.profiles.PetProfile
+import com.example.petto.ui.profiles.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 
 class Login : AppCompatActivity() {
@@ -94,7 +89,7 @@ class Login : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this, HomeActivity::class.java))
+                        startActivity(Intent(this, PostListActivity::class.java))
                         finish()
                     } else {
                         Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()

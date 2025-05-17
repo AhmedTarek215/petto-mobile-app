@@ -56,6 +56,10 @@ class PetProfile : AppCompatActivity() {
         profileImageView.setOnClickListener {
             showPetImageSelectionDialog()
         }
+        val btnBack = findViewById<ImageView>(R.id.btnBack)
+        btnBack.setOnClickListener {
+            finish() // closes the activity and returns to previous screen
+        }
 
 //        btnImportPetPhoto.setOnClickListener  {
 //            showPetImageSelectionDialog()
