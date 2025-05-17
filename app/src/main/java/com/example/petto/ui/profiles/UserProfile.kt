@@ -9,6 +9,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.petto.R
+import com.example.petto.ui.notification.NotificationActivity
+import com.example.petto.ui.post.CreatePostActivity
 import com.example.petto.ui.post.MyPostsActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -63,7 +65,18 @@ class UserProfile : AppCompatActivity() {
         if (userId.isNotEmpty()) {
             loadUserData()
         }
+        navNotifications.setOnClickListener {
+            startActivity(Intent(this, NotificationActivity::class.java))
+            finish()
+        }
 
+        navProfile.setOnClickListener {
+            // You are already here, so no action needed
+        }
+
+        fabAdd.setOnClickListener {
+            startActivity(Intent(this, CreatePostActivity::class.java))
+        }
         btnMyPets.setOnClickListener {
             startActivity(Intent(this, PetProfile::class.java))
         }
