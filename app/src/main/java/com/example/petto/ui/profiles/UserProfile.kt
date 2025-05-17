@@ -73,15 +73,26 @@ class UserProfile : AppCompatActivity() {
         }
         btnMyPosts.setOnClickListener {
             startActivity(Intent(this, MyPostsActivity::class.java))
-
         }
+        btnHelp.setOnClickListener {
+            startActivity(Intent(this, HelpActivity::class.java))
+        }
+        btnAboutUs.setOnClickListener {
+            startActivity(Intent(this, AboutUsActivity::class.java))
+        }
+        btnPrivacy.setOnClickListener {
+            startActivity(Intent(this, PrivacyActivity::class.java))
+        }
+
     }
 
     private fun loadUserData() {
         firestore.collection("Users").document(userId).get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    userNameTextView.text = document.getString("firstName") ?: ""
+                    val firstName = document.getString("firstName") ?: ""
+                    val lastName = document.getString("lastName") ?: ""
+                    userNameTextView.text = "$firstName $lastName"
                     userEmailTextView.text = document.getString("email") ?: ""
 
                     val avatarId = document.getString("avatarId")

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    ```
     <!-- Scrollable area for profile content -->
     <ScrollView
         android:layout_width="match_parent"
@@ -48,27 +50,47 @@
                             android:src="@drawable/profile"
                             app:civ_border_color="@android:color/transparent"
                             app:civ_border_width="2dp" />
+                        ```
 
-<!--                        <ImageView-->
-<!--                            android:id="@+id/btnImportPhoto"-->
-<!--                            android:layout_width="24dp"-->
-<!--                            android:layout_height="24dp"-->
-<!--                            android:layout_marginStart="-36dp"-->
-<!--                            android:layout_marginTop="48dp"-->
-<!--                            android:background="@android:c olor/transparent"-->
-<!--                            android:contentDescription="Import Profile Photo"-->
-<!--                            android:src="@drawable/camera" />-->
+                        <!--                        <ImageView-->
 
-<!--                        <ImageView-->
-<!--                            android:id="@+id/btnImportProfilePhoto"-->
-<!--                            android:layout_width="24dp"-->
-<!--                            android:layout_height="24dp"-->
-<!--                            android:layout_gravity="bottom|end"-->
-<!--                            android:layout_marginBottom="2dp"-->
-<!--                            android:layout_marginEnd="2dp"-->
-<!--                            android:src="@drawable/camera"-->
-<!--                            android:background="@android:color/transparent"-->
-<!--                            android:contentDescription="Import profile photo" />-->
+                        <!--                            android:id="@+id/btnImportPhoto"-->
+
+                        <!--                            android:layout_width="24dp"-->
+
+                        <!--                            android:layout_height="24dp"-->
+
+                        <!--                            android:layout_marginStart="-36dp"-->
+
+                        <!--                            android:layout_marginTop="48dp"-->
+
+                        <!--                            android:background="@android:c olor/transparent"-->
+
+                        <!--                            android:contentDescription="Import Profile Photo"-->
+
+                        <!--                            android:src="@drawable/camera" />-->
+
+                        <!--                        <ImageView-->
+
+                        <!--                            android:id="@+id/btnImportProfilePhoto"-->
+
+                        <!--                            android:layout_width="24dp"-->
+
+                        <!--                            android:layout_height="24dp"-->
+
+                        <!--                            android:layout_gravity="bottom|end"-->
+
+                        <!--                            android:layout_marginBottom="2dp"-->
+
+                        <!--                            android:layout_marginEnd="2dp"-->
+
+                        <!--                            android:src="@drawable/camera"-->
+
+                        <!--                            android:background="@android:color/transparent"-->
+
+                        <!--                            android:contentDescription="Import profile photo" />-->
+
+                        ```
                     </FrameLayout>
 
 
@@ -343,4 +365,6 @@
             app:tint="#D16B78"
             app:fabSize="normal" />
     </RelativeLayout>
+    ```
+
 </FrameLayout>
