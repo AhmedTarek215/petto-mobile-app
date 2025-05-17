@@ -1,7 +1,7 @@
 package com.example.petto.data.model
 
 data class PetService(
-    val service_id: String = "",
+    var service_id: String = "",
     val name: String = "",
     val imageUrl: String = "",
     val service_type: String = "",

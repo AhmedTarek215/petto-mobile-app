@@ -8,20 +8,20 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
 import com.example.petto.R
-import com.example.petto.data.model.Post
 import com.example.petto.data.model.LikeUser
+import com.example.petto.data.model.Post
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class PostAdapter(private var posts: List<Post>) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
@@ -278,4 +278,47 @@ class PostAdapter(private var posts: List<Post>) : RecyclerView.Adapter<PostAdap
         val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
         return sdf.format(timestamp.toDate())
     }
+
+    companion object {
+        fun bindPostToView(view: View, post: Post) {
+            val username = view.findViewById<TextView>(R.id.username)
+            val profileImage = view.findViewById<ImageView>(R.id.profileImage)
+            val timePosted = view.findViewById<TextView>(R.id.timePosted)
+            val postText = view.findViewById<TextView>(R.id.postText)
+            val postMedia = view.findViewById<ImageView>(R.id.postMedia)
+            val likeCountText = view.findViewById<TextView>(R.id.likeCountText)
+            val commentCountText = view.findViewById<TextView>(R.id.commentCountText)
+            val likeButton = view.findViewById<ImageView>(R.id.likeButton)
+            val commentButton = view.findViewById<ImageView>(R.id.commentButton)
+
+            username.text = post.username
+            timePosted.text = getFormattedTime(post.timestamp)
+            postText.text = post.content ?: ""
+            likeCountText.text = post.likes.toString()
+            commentCountText.text = post.commentsCount.toString()
+
+            if (!post.userProfileImage.isNullOrEmpty()) {
+                Glide.with(view.context).load(post.userProfileImage).into(profileImage)
+            } else {
+                profileImage.setImageResource(R.drawable.profile)
+            }
+
+            if (!post.mediaUrl.isNullOrEmpty()) {
+                postMedia.visibility = ImageView.VISIBLE
+                Glide.with(view.context).load(post.mediaUrl).into(postMedia)
+            } else {
+                postMedia.visibility = ImageView.GONE
+            }
+
+            likeButton.setImageResource(R.drawable.heart)
+            commentButton.setImageResource(R.drawable.speech_bubble_filled)
+        }
+
+        private fun getFormattedTime(timestamp: Timestamp?): String {
+            if (timestamp == null) return ""
+            val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+            return sdf.format(timestamp.toDate())
+        }
+    }
+
 }

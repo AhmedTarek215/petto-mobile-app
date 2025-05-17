@@ -3,16 +3,18 @@ package com.example.petto.ui.SignUp
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.petto.R
 import com.example.petto.SignUpProgressBar
 import com.example.petto.data.viewModel.SignUpViewModel
 import com.example.petto.ui.Login.Login
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class SignUp4 : AppCompatActivity() {
@@ -65,6 +67,16 @@ class SignUp4 : AppCompatActivity() {
             textInputBreed.hint = ""
             textInputBreed.error = null
         }
+
+        // 🔁 Restore values from ViewModel
+        spinnerType.setText(SignUpViewModel.petType, false)
+        val breeds = breedsMap[SignUpViewModel.petType] ?: emptyList()
+        spinnerBreed.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, breeds))
+        spinnerBreed.setText(SignUpViewModel.petBreed, false)
+
+        etWeight.setText(SignUpViewModel.petWeight)
+        etHeight.setText(SignUpViewModel.petHeight)
+        etColor.setText(SignUpViewModel.petColor)
 
         btnBack.setOnClickListener {
             val intent = Intent(this, SignUp3::class.java)
@@ -152,56 +164,50 @@ class SignUp4 : AppCompatActivity() {
                         "color" to SignUpViewModel.petColor,
                         "imageUrl" to SignUpViewModel.petImageUrl
                     )
-
-
                 )
                 SignUpViewModel.profileImageUrl?.let { imageUrl ->
                     userData["profileImageUrl"] = imageUrl
                 }
 
-
-
-                    userRef.set(userData).addOnSuccessListener {
-                        Toast.makeText(this, "Signup successful!", Toast.LENGTH_LONG).show()
-                        startActivity(Intent(this, Login::class.java))
-                        finish()
-                    }.addOnFailureListener { e ->
-                        Toast.makeText(this, "Firestore Error: ${e.message}", Toast.LENGTH_LONG)
-                            .show()
-                    }
-
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Signup failed: ${task.exception?.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                userRef.set(userData).addOnSuccessListener {
+                    Toast.makeText(this, "Signup successful!", Toast.LENGTH_LONG).show()
+                    startActivity(Intent(this, Login::class.java))
+                    finish()
+                }.addOnFailureListener { e ->
+                    Toast.makeText(this, "Firestore Error: ${e.message}", Toast.LENGTH_LONG).show()
                 }
+
+            } else {
+                Toast.makeText(
+                    this,
+                    "Signup failed: ${task.exception?.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
-        }
-
-
-        private fun showSuccessDialog() {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Success 🎉")
-            builder.setMessage("Your account has been created successfully!")
-            builder.setCancelable(false)
-            builder.setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-                val intent = Intent(this, Login::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
-            }
-            builder.show()
-        }
-
-        private fun showErrorDialog(message: String) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Signup Failed ❌")
-            builder.setMessage(message)
-            builder.setCancelable(true)
-            builder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-            builder.show()
         }
     }
+
+    private fun showSuccessDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Success 🎉")
+        builder.setMessage("Your account has been created successfully!")
+        builder.setCancelable(false)
+        builder.setPositiveButton("OK") { dialog, _ ->
+            dialog.dismiss()
+            val intent = Intent(this, Login::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+        }
+        builder.show()
+    }
+
+    private fun showErrorDialog(message: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Signup Failed ❌")
+        builder.setMessage(message)
+        builder.setCancelable(true)
+        builder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+        builder.show()
+    }
+}
