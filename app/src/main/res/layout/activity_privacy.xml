@@ -1,71 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FBFBFF"
-    android:padding="16dp">
+    android:padding="6dp">
 
-    <LinearLayout
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        android:paddingVertical="13dp"
+        android:paddingHorizontal="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <!-- Policy Text -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:fontFamily="@font/alexandriaregular"
+                android:textColor="#4F576B"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:text="We value your privacy and ensure your data is securely stored and never shared without your consent.\n\n• We collect only basic profile and pet information (name, age, gender, breed, etc.) to personalize your app experience.\n\n• Your email is used only for account authentication and communication — we never share it with third parties.\n\n• Posts, comments, likes, and reminders are stored securely and shown only where applicable (e.g., public posts or private calendar events).\n\n• Your pet's medical info, appointments, and reminders are private and only accessible by you.\n\n• We do not use your personal data for advertising or commercial purposes.\n\n• Profile and pet images are stored in Firestore for display within the app. You may change or remove them anytime.\n\n• All passwords are encrypted through Firebase Authentication. We cannot access them.\n\n• You have full control: you can update or delete your profile, pet info, or posts at any time.\n\n• Only your username and avatar are visible to other users in posts or comments.\n\n• Location-based services (like finding clinics nearby) require permission and are used only when needed — not tracked in the background.\n\n• We perform periodic audits to ensure data is handled securely and ethically.\n\n• For any questions, corrections, or data deletion requests, email us at: pettoo2025@gmail.com" />
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:layout_marginTop="17dp">
 
-        <!-- Back Button -->
         <ImageView
             android:id="@+id/backButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/arrow_left"
-            android:layout_gravity="start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back"
             android:contentDescription="Back"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="2dp"
             android:padding="4dp" />
 
-        <!-- Title -->
         <TextView
+            android:id="@+id/headerTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Privacy Policy"
             android:textSize="22sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/alexandriasemibold"
             android:textColor="#1BBCB6"
-            android:layout_marginTop="16dp" />
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true" />
+    </RelativeLayout>
 
-        <!-- Policy Text -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="#333"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:text="We value your privacy and ensure your data is securely stored and never shared without your consent.\n
-\n
-• We collect only basic profile and pet information (name, age, gender, breed, etc.) to personalize your app experience.\n
-\n
-• Your email is used only for account authentication and communication — we never share it with third parties.\n
-\n
-• Posts, comments, likes, and reminders are stored securely and shown only where applicable (e.g., public posts or private calendar events).\n
-\n
-• Your pet's medical info, appointments, and reminders are private and only accessible by you.\n
-\n
-• We do not use your personal data for advertising or commercial purposes.\n
-\n
-• Profile and pet images are stored in Firestore for display within the app. You may change or remove them anytime.\n
-\n
-• All passwords are encrypted through Firebase Authentication. We cannot access them.\n
-\n
-• You have full control: you can update or delete your profile, pet info, or posts at any time.\n
-\n
-• Only your username and avatar are visible to other users in posts or comments.\n
-\n
-• Location-based services (like finding clinics nearby) require permission and are used only when needed — not tracked in the background.\n
-\n
-• We perform periodic audits to ensure data is handled securely and ethically.\n
-\n
-• For any questions, corrections, or data deletion requests, email us at: pettoo2025@gmail.com"
-            />
 
-    </LinearLayout>
-</ScrollView>
+</FrameLayout>

@@ -5,10 +5,16 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
-import android.widget.*
+import android.widget.GridLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.petto.R
+import com.example.petto.ui.HomeActivity
+import com.example.petto.ui.calender.calender
 import com.example.petto.ui.notification.NotificationActivity
 import com.example.petto.ui.post.CreatePostActivity
 import com.example.petto.ui.post.MyPostsActivity
@@ -17,7 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import de.hdodenhof.circleimageview.CircleImageView
 
 class UserProfile : AppCompatActivity() {
-//
+
     private lateinit var userNameTextView: TextView
     private lateinit var userEmailTextView: TextView
     private lateinit var profileImageView: CircleImageView
@@ -28,6 +34,7 @@ class UserProfile : AppCompatActivity() {
     private lateinit var btnPrivacy: LinearLayout
     private lateinit var btnHelp: LinearLayout
     private lateinit var btnAboutUs: LinearLayout
+    private lateinit var btnLogout: LinearLayout
 
     private lateinit var navHome: ImageView
     private lateinit var navCalendar: ImageView
@@ -52,6 +59,7 @@ class UserProfile : AppCompatActivity() {
         btnPrivacy = findViewById(R.id.btnPrivacy)
         btnHelp = findViewById(R.id.btnHelp)
         btnAboutUs = findViewById(R.id.btnAboutUs)
+        btnLogout = findViewById(R.id.btnLogout)
 
         navHome = findViewById(R.id.nav_home)
         navCalendar = findViewById(R.id.nav_calendar)
@@ -65,18 +73,30 @@ class UserProfile : AppCompatActivity() {
         if (userId.isNotEmpty()) {
             loadUserData()
         }
+
+        navHome.setOnClickListener {
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
+        }
+
+        navCalendar.setOnClickListener {
+            startActivity(Intent(this, calender::class.java))
+            finish()
+        }
+
+        fabAdd.setOnClickListener {
+            startActivity(Intent(this, CreatePostActivity::class.java))
+        }
+
         navNotifications.setOnClickListener {
             startActivity(Intent(this, NotificationActivity::class.java))
             finish()
         }
 
         navProfile.setOnClickListener {
-            // You are already here, so no action needed
+            // already here
         }
 
-        fabAdd.setOnClickListener {
-            startActivity(Intent(this, CreatePostActivity::class.java))
-        }
         btnMyPets.setOnClickListener {
             startActivity(Intent(this, PetProfile::class.java))
         }
@@ -84,19 +104,41 @@ class UserProfile : AppCompatActivity() {
         profileImageView.setOnClickListener {
             showAvatarSelectionDialog()
         }
+
         btnMyPosts.setOnClickListener {
             startActivity(Intent(this, MyPostsActivity::class.java))
         }
+
         btnHelp.setOnClickListener {
             startActivity(Intent(this, HelpActivity::class.java))
         }
+
         btnAboutUs.setOnClickListener {
             startActivity(Intent(this, AboutUsActivity::class.java))
         }
+
         btnPrivacy.setOnClickListener {
             startActivity(Intent(this, PrivacyActivity::class.java))
         }
 
+        btnLogout.setOnClickListener {
+            showLogoutConfirmation()
+        }
+    }
+
+    private fun showLogoutConfirmation() {
+        AlertDialog.Builder(this)
+            .setTitle("Log Out")
+            .setMessage("Are you sure you want to log out?")
+            .setPositiveButton("Log Out") { _, _ ->
+                FirebaseAuth.getInstance().signOut()
+                val intent = Intent(this, com.example.petto.ui.intro.IntroActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun loadUserData() {
@@ -167,7 +209,7 @@ class UserProfile : AppCompatActivity() {
                     val params = GridLayout.LayoutParams().apply {
                         width = 250
                         height = 250
-                        rowSpec = GridLayout.spec(index / 3)  // 3 per row
+                        rowSpec = GridLayout.spec(index / 3)
                         columnSpec = GridLayout.spec(index % 3)
                         setMargins(16, 16, 16, 16)
                     }
@@ -188,7 +230,6 @@ class UserProfile : AppCompatActivity() {
                     index++
                 }
             }
-
             .addOnFailureListener {
                 Toast.makeText(this, "Failed to load avatars", Toast.LENGTH_SHORT).show()
             }
