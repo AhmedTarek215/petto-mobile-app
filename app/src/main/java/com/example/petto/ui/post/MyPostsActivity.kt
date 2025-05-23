@@ -4,16 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.petto.R
 import com.example.petto.data.model.Post
-import com.example.petto.ui.profiles.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -25,6 +24,7 @@ class MyPostsActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var emptyStateText: TextView
     private lateinit var createPostButton: Button
+    private lateinit var backButton: ImageView
 
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -37,18 +37,7 @@ class MyPostsActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBarMyPosts)
         emptyStateText = findViewById(R.id.emptyStateText)
         createPostButton = findViewById(R.id.createFirstPostBtn)
-
-        // Toolbar setup
-        val toolbar: Toolbar = findViewById(R.id.myPostsToolbar)
-        toolbar.title = "My Posts"
-        toolbar.setNavigationIcon(R.drawable.back)
-        toolbar.setNavigationOnClickListener {
-            val intent = Intent(this, UserProfile::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            startActivity(intent)
-            finish()
-        }
-
+        backButton = findViewById(R.id.backButton)
         recyclerView.layoutManager = LinearLayoutManager(this)
         postAdapter = PostAdapter(emptyList())
         recyclerView.adapter = postAdapter
@@ -56,6 +45,10 @@ class MyPostsActivity : AppCompatActivity() {
         createPostButton.setOnClickListener {
             val intent = Intent(this, CreatePostActivity::class.java)
             startActivity(intent)
+        }
+
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
 
         loadMyPosts()

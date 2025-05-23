@@ -17,6 +17,7 @@ import com.example.petto.ui.post.PostAdapter
 import com.example.petto.ui.tips.TipsAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 class HomeActivity : AppCompatActivity() {
 
@@ -65,13 +66,13 @@ class HomeActivity : AppCompatActivity() {
         firestore.collection("services").get().addOnSuccessListener { result ->
             val services = result.documents.mapNotNull { doc ->
                 doc.toObject(PetService::class.java)?.apply {
-                    service_id = doc.id // ✅ inject the document ID
+                    service_id = doc.id
                 }
             }
 
             val adapter = ServicesAdapter(services.shuffled()) { service ->
                 val intent = Intent(this, ServiceProfile::class.java)
-                intent.putExtra("service_id", service.service_id) // ✅ this will now be valid
+                intent.putExtra("service_id", service.service_id)
                 startActivity(intent)
             }
 
@@ -84,7 +85,6 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, com.example.petto.ui.Services.ServicesPage::class.java))
         }
     }
-
 
     private fun setupTips() {
         tipAdapter = TipsAdapter(listOf())
@@ -129,13 +129,12 @@ class HomeActivity : AppCompatActivity() {
         postsRecyclerView.adapter = postAdapter
 
         firestore.collection("posts")
-            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { result ->
-                postList = result.documents.mapNotNull { doc ->
-                    doc.toObject(Post::class.java)?.apply {
-                        id = doc.id // Inject Firestore document ID into the post
-                    }
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null || snapshot == null) return@addSnapshotListener
+
+                postList = snapshot.documents.mapNotNull { doc ->
+                    doc.toObject(Post::class.java)?.apply { id = doc.id }
                 }
 
                 showPostAt(currentPostIndex)
