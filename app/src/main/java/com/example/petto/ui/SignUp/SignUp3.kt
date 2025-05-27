@@ -4,7 +4,13 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.GridLayout
+import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.petto.R
@@ -13,7 +19,8 @@ import com.example.petto.data.viewModel.SignUpViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 class SignUp3 : AppCompatActivity() {
 
@@ -35,7 +42,7 @@ class SignUp3 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up3)
 
-        // Initialize UI elements
+
         progressBar = findViewById(R.id.progressBar)
         etName = findViewById(R.id.etName)
         radioMale = findViewById(R.id.radioMale)
@@ -49,6 +56,19 @@ class SignUp3 : AppCompatActivity() {
 
         val step = intent.getIntExtra("progress", 3)
         progressBar.setProgress(if (step > 3) 3 else step)
+
+
+        etName.setText(SignUpViewModel.petName)
+        if (SignUpViewModel.petGender == "Male") radioMale.isChecked = true
+        if (SignUpViewModel.petGender == "Female") radioFemale.isChecked = true
+        if (SignUpViewModel.petBirthDate.isNotEmpty()) {
+            tvDateOfBirth.text = SignUpViewModel.petBirthDate
+            tvDateOfBirth.setTextColor(resources.getColor(R.color.black, theme))
+        }
+        SignUpViewModel.petImageUrl?.let { url ->
+            selectedPetImageUrl = url
+            Glide.with(this).load(url).into(profileImage)
+        }
 
         tvDateOfBirth.setOnClickListener { showDatePicker() }
 
@@ -93,10 +113,14 @@ class SignUp3 : AppCompatActivity() {
             tvDateOfBirth.text = formattedDate
             tvDateOfBirth.setTextColor(resources.getColor(R.color.black, theme))
             tvDateOfBirth.error = null
+
+            SignUpViewModel.petBirthDate = formattedDate
+
         }, year, month, day)
 
         datePickerDialog.show()
     }
+
 
     private fun showPetImageSelectionDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_profile_image_selector, null)
@@ -171,7 +195,7 @@ class SignUp3 : AppCompatActivity() {
 
         if (!isValid) return
 
-        // Save to ViewModel
+
         SignUpViewModel.petName = petName
         SignUpViewModel.petGender = gender
         SignUpViewModel.petBirthDate = dob

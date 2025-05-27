@@ -58,16 +58,12 @@ class ServiceProfile : AppCompatActivity() {
     private lateinit var loadingIndicator: ProgressBar
     private lateinit var contentLayout: LinearLayout
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_service_profile)
 
         initializeViews()
         setupAdapters()
-
-        //selectedServiceId = "service1"
 
         selectedServiceId = intent.getStringExtra("service_id") ?: run {
             showError("No service ID provided")
@@ -91,7 +87,6 @@ class ServiceProfile : AppCompatActivity() {
         addReviewIcon.setOnClickListener {
             showReviewDialog()
         }
-
     }
 
     private fun initializeViews() {
@@ -110,8 +105,6 @@ class ServiceProfile : AppCompatActivity() {
         addReviewIcon = findViewById(R.id.add)
         loadingIndicator = findViewById(R.id.loadingIndicator)
         contentLayout = findViewById(R.id.contentLayout)
-
-
     }
 
     private fun setupAdapters() {
@@ -131,8 +124,6 @@ class ServiceProfile : AppCompatActivity() {
                 loadingIndicator.visibility = View.VISIBLE
                 contentLayout.visibility = View.GONE
 
-
-                // Load service details
                 db.collection("services").document(serviceId).get()
                     .addOnSuccessListener { document ->
                         if (document != null) {
@@ -142,12 +133,30 @@ class ServiceProfile : AppCompatActivity() {
                             serviceWeb.text = document.getString("web") ?: ""
                             serviceLocation.text = document.getString("location") ?: ""
 
+                            // ✅ Display stored average rating (even if there are no reviews)
+                            val avgRating = document.getDouble("average_rating") ?: 0.0
+                            ratingBar.rating = avgRating.toFloat()
+                            averageRatingText.text = String.format("%.1f", avgRating)
+
                             val imageUrl = document.getString("imageUrl")
                             Glide.with(this@ServiceProfile)
+                                .asBitmap()
                                 .load(imageUrl)
                                 .placeholder(R.drawable.service_image)
                                 .error(R.drawable.service_image)
-                                .into(serviceImage)
+                                .into(object : com.bumptech.glide.request.target.CustomTarget<android.graphics.Bitmap>() {
+                                    override fun onResourceReady(
+                                        resource: android.graphics.Bitmap,
+                                        transition: com.bumptech.glide.request.transition.Transition<in android.graphics.Bitmap>?
+                                    ) {
+                                        val resized = android.graphics.Bitmap.createScaledBitmap(resource, 600, 320, true)
+                                        serviceImage.setImageBitmap(resized)
+                                    }
+
+                                    override fun onLoadCleared(placeholder: android.graphics.drawable.Drawable?) {
+                                        serviceImage.setImageDrawable(placeholder)
+                                    }
+                                })
 
                             val serviceNames = document.get("service") as? List<String> ?: emptyList()
                             servicesList.clear()
@@ -158,17 +167,13 @@ class ServiceProfile : AppCompatActivity() {
                         }
                         loadingIndicator.visibility = View.GONE
                         contentLayout.visibility = View.VISIBLE
-
                     }
                     .addOnFailureListener {
                         showError("Failed to load service details.")
                         loadingIndicator.visibility = View.GONE
                         contentLayout.visibility = View.VISIBLE
-
                     }
 
-
-                // Load reviews
                 db.collection("services").document(serviceId)
                     .collection("reviews")
                     .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -210,23 +215,24 @@ class ServiceProfile : AppCompatActivity() {
                         reviewsList.addAll(reviews)
                         reviewsAdapter.notifyDataSetChanged()
 
-                        //Calculate and display average rating
+                        // ✅ Recalculate average rating if there are reviews
                         val totalRating = reviews.sumOf { it.rating.toDouble() }
-                        val averageRating = if (reviews.isNotEmpty()) totalRating / reviews.size else 0.0
+                        val averageRating = if (reviews.isNotEmpty()) totalRating / reviews.size else null
 
-                        ratingBar.rating = averageRating.toFloat()
-                        averageRatingText.text = String.format("%.1f", averageRating)
+                        if (averageRating != null) {
+                            ratingBar.rating = averageRating.toFloat()
+                            averageRatingText.text = String.format("%.1f", averageRating)
 
-                        //Update the average rating in Firestore
-                        db.collection("services")
-                            .document(serviceId)
-                            .update("average_rating", averageRating)
-                            .addOnSuccessListener {
-                                Log.d("ServiceProfile", "Average rating updated: $averageRating")
-                            }
-                            .addOnFailureListener {
-                                Log.e("ServiceProfile", "Failed to update rating: ${it.message}")
-                            }
+                            db.collection("services")
+                                .document(serviceId)
+                                .update("average_rating", averageRating)
+                                .addOnSuccessListener {
+                                    Log.d("ServiceProfile", "Average rating updated: $averageRating")
+                                }
+                                .addOnFailureListener {
+                                    Log.e("ServiceProfile", "Failed to update rating: ${it.message}")
+                                }
+                        }
                     }
                     .addOnFailureListener {
                         showError("Failed to load reviews.")
@@ -247,7 +253,6 @@ class ServiceProfile : AppCompatActivity() {
 
                 loadingIndicator.visibility = View.VISIBLE
                 contentLayout.visibility = View.GONE
-
 
                 db.collection("Users").document(userId).get()
                     .addOnSuccessListener { userDoc ->
@@ -273,33 +278,25 @@ class ServiceProfile : AppCompatActivity() {
                             .add(reviewData)
                             .addOnSuccessListener {
                                 Toast.makeText(this@ServiceProfile, "Review submitted!", Toast.LENGTH_SHORT).show()
-                                loadServiceData(selectedServiceId) // Refresh reviews
+                                loadServiceData(selectedServiceId)
                                 loadingIndicator.visibility = View.GONE
                                 contentLayout.visibility = View.VISIBLE
-
                             }
                             .addOnFailureListener {
                                 showError("Failed to submit review.")
                                 loadingIndicator.visibility = View.GONE
                                 contentLayout.visibility = View.VISIBLE
-
                             }
                     }
                     .addOnFailureListener {
                         showError("Failed to fetch user info.")
                         loadingIndicator.visibility = View.GONE
                         contentLayout.visibility = View.VISIBLE
-
                     }
-
-
-
             }
         })
         dialog.show()
     }
-
-
 
     private fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

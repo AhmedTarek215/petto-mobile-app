@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:backgroundTint="#FBFBFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:paddingBottom="90dp"
-        android:paddingHorizontal="8dp"
+        android:paddingBottom="70dp"
         tools:ignore="SpeakableTextPresentCheck">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/homeContentLayout"
@@ -21,27 +22,37 @@
             android:background="#FBFBFF"
             android:padding="16dp">
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <LinearLayout
                 android:id="@+id/homeSectionsLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <!-- Greeting -->
                 <TextView
                     android:id="@+id/greetingText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hello First name !"
-                    android:textSize="24sp"
-                    android:fontFamily="@font/alexandriasemibold"
-                    android:textColor="#4F576B"
+                    android:layout_gravity="center"
                     android:layout_marginVertical="15dp"
-                    android:layout_gravity="center"/>
+                    android:fontFamily="@font/alexandriasemibold"
+                    android:text="Hello First name !"
+                    android:textColor="#4F576B"
+                    android:textSize="24sp" />
 
                 <!-- Upcoming Events Section -->
                 <RelativeLayout
@@ -53,29 +64,29 @@
                         android:id="@+id/upcomingEventsTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Up coming events"
-                        android:fontFamily="@font/alexandriamedium"
-                        android:textColor="#4F576B"
                         android:layout_marginVertical="8dp"
+                        android:fontFamily="@font/alexandriamedium"
+                        android:text="Up coming events"
+                        android:textColor="#4F576B"
                         android:textSize="18sp" />
 
                     <ImageView
                         android:id="@+id/addReminderBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginVertical="12dp"
                         android:layout_marginEnd="8dp"
-                        android:layout_alignParentEnd="true"
-                        android:src="@drawable/add"
-                        android:contentDescription="Add" />
+                        android:contentDescription="Add"
+                        android:src="@drawable/add" />
                 </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="16dp">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/reminderLeftArrow"
@@ -88,9 +99,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:clipToPadding="false"
                         android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:clipToPadding="false" />
+                        android:paddingEnd="8dp" />
 
                     <ImageView
                         android:id="@+id/reminderRightArrow"
@@ -108,32 +119,33 @@
                         android:id="@+id/petServicesTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Pet services"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="5dp"
                         android:fontFamily="@font/alexandriamedium"
+                        android:text="Pet services"
                         android:textColor="#4F576B"
-                        android:layout_marginVertical="8dp"
                         android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/showAllServices"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Show all"
-                        android:layout_marginVertical="10dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
-                        android:textColor="#D16B78"
                         android:fontFamily="@font/alexandriasemibold"
-                        android:layout_alignParentEnd="true" />
+                        android:text="Show all"
+                        android:textColor="#D16B78" />
                 </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/servicesRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="3dp"
                     android:layout_marginBottom="16dp"
-                    android:orientation="horizontal"
-                    android:clipToPadding="false" />
+                    android:clipToPadding="false"
+                    android:orientation="horizontal" />
 
                 <!-- Tips and Tricks Section -->
                 <RelativeLayout
@@ -144,52 +156,53 @@
                         android:id="@+id/tipsTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tips and Tricks"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="5dp"
                         android:fontFamily="@font/alexandriamedium"
+                        android:text="Tips and Tricks"
                         android:textColor="#4F576B"
-                        android:layout_marginVertical="8dp"
                         android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/showAllTips"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Show all"
-                        android:layout_marginVertical="9dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="9dp"
                         android:layout_marginEnd="8dp"
-                        android:textColor="#D16B78"
                         android:fontFamily="@font/alexandriasemibold"
-                        android:layout_alignParentEnd="true" />
+                        android:text="Show all"
+                        android:textColor="#D16B78" />
                 </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="16dp"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/tipsLeftArrow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/left"/>
+                        android:src="@drawable/left" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/tipsRecyclerView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:clipToPadding="false" />
+                        android:clipToPadding="false"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp" />
 
                     <ImageView
                         android:id="@+id/tipsRightArrow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/right"/>
+                        android:src="@drawable/right" />
                 </LinearLayout>
 
                 <!-- Posts Section -->
@@ -201,52 +214,54 @@
                         android:id="@+id/postsTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Posts"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="7dp"
+                        android:layout_marginStart="3dp"
                         android:fontFamily="@font/alexandriamedium"
+                        android:text="Posts"
                         android:textColor="#4F576B"
-                        android:layout_marginVertical="8dp"
                         android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/showAllPosts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Show all"
-                        android:layout_marginVertical="10dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="9dp"
                         android:layout_marginEnd="8dp"
-                        android:textColor="#D16B78"
                         android:fontFamily="@font/alexandriasemibold"
-                        android:layout_alignParentEnd="true" />
+                        android:text="Show all"
+                        android:textColor="#D16B78" />
                 </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="16dp"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/postsLeftArrow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/left"/>
+                        android:src="@drawable/left" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/postsRecyclerView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:clipToPadding="false" />
+                        android:clipToPadding="false"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp" />
 
                     <ImageView
                         android:id="@+id/postsRightArrow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/right"/>
+                        android:src="@drawable/right" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

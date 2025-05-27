@@ -94,7 +94,7 @@
                     android:layout_margin="10dp"
                     android:textSize="17sp" />
 
-                <ImageView
+                <!--<ImageView
                     android:id="@+id/btnAttach"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="5dp"
                     android:contentDescription="Attach media"
-                    android:padding="4dp" />
+                    android:padding="4dp" />-->
             </FrameLayout>
 
 
@@ -113,8 +113,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginTop="27dp"
+                android:layout_marginTop="21dp"
                 android:padding="5dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnPost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pink_pill"
+                    android:fontFamily="@font/alexandriasemibold"
+                    android:text="Post"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginVertical="6dp"
+                    android:paddingStart="41dp"
+                    android:paddingEnd="41dp"
+                    android:textColor="#FBFBFF"
+                    android:textSize="16sp"
+                    android:elevation="5dp"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnCancel"
@@ -125,22 +140,9 @@
                     android:text="Cancel"
                     android:paddingStart="30dp"
                     android:paddingEnd="30dp"
-                    android:layout_marginEnd="20dp"
-                    android:textColor="#D16B78"
-                    android:textSize="16sp"
-                    android:elevation="5dp"/>
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnPost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/pink_pill"
-                    android:fontFamily="@font/alexandriasemibold"
-                    android:text="Post"
                     android:layout_marginStart="20dp"
-                    android:paddingStart="41dp"
-                    android:paddingEnd="41dp"
-                    android:textColor="#FBFBFF"
+                    android:layout_marginVertical="6dp"
+                    android:textColor="#D16B78"
                     android:textSize="16sp"
                     android:elevation="5dp"/>
             </LinearLayout>

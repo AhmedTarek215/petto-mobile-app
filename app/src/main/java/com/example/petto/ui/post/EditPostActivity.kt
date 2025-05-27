@@ -1,7 +1,10 @@
 package com.example.petto.ui.post
 
 import android.os.Bundle
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.petto.R
@@ -46,6 +49,12 @@ class EditPostActivity : AppCompatActivity() {
                 Toast.makeText(this, "Content can't be empty", Toast.LENGTH_SHORT).show()
             }
         }
+
+        val cancelButton = findViewById<Button>(R.id.btnCancel)
+        cancelButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
     }
 
     private fun loadPost() {

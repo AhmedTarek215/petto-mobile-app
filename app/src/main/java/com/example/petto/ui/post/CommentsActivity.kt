@@ -1,7 +1,7 @@
 package com.example.petto.ui.post
 
-import android.content.Intent
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,7 +15,10 @@ import com.example.petto.data.model.Comment
 import com.example.petto.ui.adapters.CommentAdapter
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class CommentsActivity : AppCompatActivity() {
 
@@ -23,12 +26,24 @@ class CommentsActivity : AppCompatActivity() {
     private lateinit var commentsRecyclerView: RecyclerView
     private lateinit var commentInput: EditText
     private lateinit var sendButton: ImageView
+
     private lateinit var postUsername: TextView
     private lateinit var postContent: TextView
     private lateinit var postMedia: ImageView
+    private lateinit var profileImage: ImageView
+    private lateinit var timePosted: TextView
+    private lateinit var likeButton: ImageView
+    private lateinit var likeCountText: TextView
+    private lateinit var commentButton: ImageView
+    private lateinit var commentCountText: TextView
 
     private lateinit var postId: String
-    private var postOwnerId: String = "" // 🔹 Stores the post's owner UID
+    private var postOwnerId: String = ""
+    private var isLiked = false
+
+    private var postListener: ListenerRegistration? = null
+    private var commentsListener: ListenerRegistration? = null
+
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
@@ -37,7 +52,6 @@ class CommentsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_comments)
 
         postId = intent.getStringExtra("postId") ?: ""
-
         if (postId.isEmpty()) {
             Toast.makeText(this, "Missing postId!", Toast.LENGTH_SHORT).show()
             finish()
@@ -45,15 +59,18 @@ class CommentsActivity : AppCompatActivity() {
         }
 
         findViewById<ImageView>(R.id.backIcon).setOnClickListener {
-            val intent = Intent(this, PostListActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            startActivity(intent)
             finish()
         }
 
-        postUsername = findViewById(R.id.postUsername)
-        postContent = findViewById(R.id.postContent)
+        postUsername = findViewById(R.id.username)
+        postContent = findViewById(R.id.postText)
         postMedia = findViewById(R.id.postMedia)
+        profileImage = findViewById(R.id.profileImage)
+        timePosted = findViewById(R.id.timePosted)
+        likeButton = findViewById(R.id.likeButton)
+        likeCountText = findViewById(R.id.likeCountText)
+        commentButton = findViewById(R.id.commentButton)
+        commentCountText = findViewById(R.id.commentCountText)
 
         commentsRecyclerView = findViewById(R.id.commentsRecyclerView)
         commentInput = findViewById(R.id.commentInput)
@@ -63,13 +80,12 @@ class CommentsActivity : AppCompatActivity() {
         commentsRecyclerView.layoutManager = LinearLayoutManager(this)
         commentsRecyclerView.adapter = commentAdapter
 
-        loadPostContent()
-        loadComments()
-        val shouldHighlight = intent.getBooleanExtra("highlightCommentInput", false)
-        if (shouldHighlight) {
+        listenToPostContent()
+        listenToComments()
+
+        if (intent.getBooleanExtra("highlightCommentInput", false)) {
             commentInput.requestFocus()
-            commentInput.setBackgroundResource(R.drawable.highlight_comment_input) // We'll create this drawable
-            // Remove highlight after 3 seconds
+            commentInput.setBackgroundResource(R.drawable.highlight_comment_input)
             commentInput.postDelayed({
                 commentInput.setBackgroundResource(android.R.color.transparent)
             }, 3000)
@@ -104,20 +120,12 @@ class CommentsActivity : AppCompatActivity() {
                         commentInput.text.clear()
                         Toast.makeText(this, "Comment added", Toast.LENGTH_SHORT).show()
 
-                        // 🔹 Increment comment count
                         firestore.collection("posts")
                             .document(postId)
-                            .update("commentsCount", com.google.firebase.firestore.FieldValue.increment(1))
+                            .update("commentsCount", FieldValue.increment(1))
 
-                        // 🔹 Send notification if commenter != owner
                         if (currentUser.uid != postOwnerId) {
-                            sendCommentNotification(
-                                postOwnerId = postOwnerId,
-                                commenterId = currentUser.uid,
-                                postId = postId,
-                                commenterName = username,
-                                profileImageUrl = profileImage
-                            )
+                            sendCommentNotification(postOwnerId, currentUser.uid, postId, username, profileImage)
                         }
                     }
                     .addOnFailureListener {
@@ -149,27 +157,68 @@ class CommentsActivity : AppCompatActivity() {
             .add(notifData)
     }
 
-    private fun loadPostContent() {
-        firestore.collection("posts").document(postId).get().addOnSuccessListener { document ->
+    private fun listenToPostContent() {
+        val currentUser = auth.currentUser ?: return
+        val userId = currentUser.uid
+        val postRef = firestore.collection("posts").document(postId)
+
+        postListener = postRef.addSnapshotListener { document, _ ->
+            if (isFinishing || isDestroyed) return@addSnapshotListener
+
             if (document != null && document.exists()) {
+                postOwnerId = document.getString("userId") ?: ""
                 postUsername.text = document.getString("username") ?: "User"
                 postContent.text = document.getString("content") ?: ""
 
-                postOwnerId = document.getString("userId") ?: "" // 🔹 Fetch post owner UID
+                val profileUrl = document.getString("userProfileImage")
+                    ?: document.getString("profileImageUrl")
+
+                if (!profileUrl.isNullOrEmpty()) {
+                    Glide.with(applicationContext).load(profileUrl)
+                        .placeholder(R.drawable.profile)
+                        .into(profileImage)
+                } else {
+                    profileImage.setImageResource(R.drawable.profile)
+                }
+
+                val timestamp = document.getTimestamp("timestamp")
+                if (timestamp != null) {
+                    val relativeTime = DateUtils.getRelativeTimeSpanString(
+                        timestamp.toDate().time,
+                        System.currentTimeMillis(),
+                        DateUtils.MINUTE_IN_MILLIS
+                    )
+                    timePosted.text = relativeTime
+                }
 
                 val mediaUrl = document.getString("mediaUrl")
                 if (!mediaUrl.isNullOrEmpty()) {
                     postMedia.visibility = ImageView.VISIBLE
-                    Glide.with(this).load(mediaUrl).into(postMedia)
+                    Glide.with(applicationContext).load(mediaUrl).into(postMedia)
                 } else {
                     postMedia.visibility = ImageView.GONE
+                }
+
+                val likes = document.getLong("likes")?.toInt() ?: 0
+                val commentsCount = document.getLong("commentsCount")?.toInt() ?: 0
+                likeCountText.text = likes.toString()
+                commentCountText.text = commentsCount.toString()
+
+                postRef.collection("likes").document(userId).get()
+                    .addOnSuccessListener { likeDoc ->
+                        isLiked = likeDoc.exists()
+                        likeButton.setImageResource(if (isLiked) R.drawable.heart_filled else R.drawable.heart)
+                    }
+
+                likeButton.setOnClickListener {
+                    handleLikeToggle(userId, postRef)
                 }
             }
         }
     }
 
-    private fun loadComments() {
-        firestore.collection("posts")
+    private fun listenToComments() {
+        commentsListener = firestore.collection("posts")
             .document(postId)
             .collection("comments")
             .orderBy("timestamp")
@@ -178,5 +227,30 @@ class CommentsActivity : AppCompatActivity() {
                 val comments = snapshot.documents.mapNotNull { it.toObject(Comment::class.java) }
                 commentAdapter.updateComments(comments)
             }
+    }
+
+    private fun handleLikeToggle(userId: String, postRef: DocumentReference) {
+        val likeDocRef = postRef.collection("likes").document(userId)
+
+        if (isLiked) {
+            likeDocRef.delete().addOnSuccessListener {
+                postRef.update("likes", FieldValue.increment(-1))
+                likeButton.setImageResource(R.drawable.heart)
+                isLiked = false
+            }
+        } else {
+            val likeData = mapOf("timestamp" to Timestamp.now())
+            likeDocRef.set(likeData).addOnSuccessListener {
+                postRef.update("likes", FieldValue.increment(1))
+                likeButton.setImageResource(R.drawable.heart_filled)
+                isLiked = true
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        postListener?.remove()
+        commentsListener?.remove()
+        super.onDestroy()
     }
 }

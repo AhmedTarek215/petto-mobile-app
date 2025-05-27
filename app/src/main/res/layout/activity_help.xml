@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FBFBFF">
+
+    <!-- Fixed Toolbar -->
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="16dp">
+
+        <!-- Centered Title -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Help and Support"
+            android:textSize="22sp"
+            android:textColor="#1BBCB6"
+            android:fontFamily="@font/alexandriasemibold"
+            android:layout_centerInParent="true" />
+
+        <!-- Back Button on the left -->
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back"
+            android:contentDescription="Back"
+            android:padding="4dp"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+    <!-- Scrollable Content below the toolbar -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="85dp"
+        android:paddingHorizontal="15.5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Need help using Petto? Here's a quick guide to get started:\n"
+                android:textSize="16sp"
+                android:textColor="#4F576B"
+                android:fontFamily="@font/alexandriaregular"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Navigate through the bottom menu to explore posts, services, and your profile.\n\n• Use the '+' button to create a new post.\n\n• Add pet info in your profile to track their health, vaccines, and reminders.\n\n• Access tips and articles from the Tips section to better care for your pet.\n\n• Find pet clinics, shelters, and hotels from the Services section.\n\n• Set reminders for vet appointments or medications from the Calendar.\n\n• For further help, contact us via email at: petto.support@gmail.com"
+                android:textSize="16sp"
+                android:fontFamily="@font/alexandriaregular"
+                android:textColor="#4F576B" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/service_image"
                     app:shapeAppearanceOverlay="@style/RoundedImage" />
 
                 <ImageView
@@ -44,7 +43,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|top"
-                    android:layout_margin="8dp"
+                    android:layout_marginVertical="9dp"
+                    android:layout_marginHorizontal="2dp"
                     android:background="@drawable/back"
                     android:padding="8dp"
                     android:scaleType="centerInside" />

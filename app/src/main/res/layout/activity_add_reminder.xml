@@ -277,13 +277,15 @@
       android:id="@+id/loadingOverlay"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:visibility="gone"
-      android:gravity="center">
+      android:background="#75000000"
+      android:visibility="visible"
+      android:layout_gravity="center">
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="64dp"
         android:layout_height="64dp"
+        android:layout_gravity="center"
         android:indeterminate="true" />
   </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

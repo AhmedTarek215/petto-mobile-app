@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/white_pill_stroke"
     android:layout_margin="8dp"
+    app:cardBackgroundColor="#FBFBFF"
     app:cardCornerRadius="16dp"
     app:cardElevation="4dp">
 
@@ -34,20 +35,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="User Name"
-                android:fontFamily="@font/alexandriaregular"
+                android:fontFamily="@font/alexandriamedium"
                 android:textSize="15sp"
                 android:textColor="#4F576B" />
         </LinearLayout>
 
-        <!-- Optional Image -->
-        <ImageView
-            android:id="@+id/commentImage"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="fitCenter"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/service_image"
-            android:visibility="gone" />
 
         <!-- Optional Comment Text -->
         <TextView
@@ -57,12 +49,12 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/comment_bubble"
             android:fontFamily="@font/alexandriaregular"
+            android:textColor="#4F576B"
             android:padding="10dp"
             android:layout_gravity="center"
             android:text="Lorem ipsum dolor sit ameta Lorem ipsum dolor sit ameta Lorem ipsum dolor sit ameta"
-            android:textColor="@color/black"
-            android:textSize="11dp"
-            android:visibility="gone"
+            android:textSize="13dp"
+            android:visibility="visible"
             tools:ignore="TextSizeCheck" />
 
 
@@ -75,7 +67,7 @@
             android:fontFamily="@font/alexandriaregular"
             android:textColor="#888888"
             android:textSize="11sp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:layout_marginStart="7dp"
             android:layout_gravity="start" />
 

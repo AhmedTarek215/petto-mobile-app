@@ -5,7 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.GridLayout
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.petto.R
@@ -35,7 +39,6 @@ class SignUp2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up2)
 
-        // Init views
         profileImage = findViewById(R.id.profileImage)
         btnImportPhoto = findViewById(R.id.btnImportPhoto)
         etEmail = findViewById(R.id.etEmail)
@@ -49,6 +52,15 @@ class SignUp2 : AppCompatActivity() {
 
         val step = intent.getIntExtra("progress", 2)
         progressBar.setProgress(step)
+
+        etEmail.setText(SignUpViewModel.email)
+        etPassword.setText(SignUpViewModel.password)
+        etConfirmPassword.setText(SignUpViewModel.password)
+
+        SignUpViewModel.profileImageUrl?.let { url ->
+            selectedImageUrl = url
+            Glide.with(this).load(url).into(profileImage)
+        }
 
         btnImportPhoto.setOnClickListener {
             showImageSelectionDialog()
@@ -171,8 +183,4 @@ class SignUp2 : AppCompatActivity() {
                 Toast.makeText(this, "Could not load images.", Toast.LENGTH_SHORT).show()
             }
     }
-
 }
-
-
-

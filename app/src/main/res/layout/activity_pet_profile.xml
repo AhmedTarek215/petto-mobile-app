@@ -8,7 +8,7 @@
     tools:ignore="SpeakableTextPresentCheck">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main"
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FBFBFF"
@@ -23,6 +23,9 @@
             android:layout_gravity="start|top"
             android:layout_margin="8dp"
             android:background="@drawable/back"
+            android:contentDescription="Back"
+            android:clickable="true"
+            android:focusable="true"
             android:padding="8dp"
             android:scaleType="centerInside"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -38,26 +41,10 @@
             android:layout_height="135dp"
             android:layout_marginTop="60dp"
             android:contentDescription="Profile Picture"
-            android:src="@drawable/profile"
-            app:civ_border_color="@android:color/transparent"
-            app:civ_border_width="2dp"
+            android:src="@drawable/pet_care"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-<!--        <ImageView-->
-<!--            android:id="@+id/btnImportPetPhoto "-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="148dp"-->
-<!--            android:layout_marginStart="134dp"-->
-<!--            android:background="@android:color/transparent"-->
-<!--            android:contentDescription="Import Pet Photo"-->
-<!--            android:padding="4dp"-->
-<!--            android:src="@drawable/camera"-->
-<!--            app:layout_constraintStart_toStartOf="@+id/profileImageView"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-
 
         <EditText
             android:id="@+id/name"
@@ -75,7 +62,8 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginVertical="16dp"
+            android:layout_marginHorizontal="12dp"
             android:backgroundTint="#1BBCB6"
             app:cardCornerRadius="24dp"
             app:cardElevation="4dp"

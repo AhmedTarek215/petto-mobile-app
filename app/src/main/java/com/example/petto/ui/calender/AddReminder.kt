@@ -17,7 +17,7 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.petto.R
-import com.example.petto.worker.ReminderWorker
+import com.example.petto.ui.calender.ReminderWorker
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

@@ -4,12 +4,14 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-//import android.util.Log
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.petto.R
-//import com.example.petto.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -18,7 +20,6 @@ import de.hdodenhof.circleimageview.CircleImageView
 class CreatePostActivity : AppCompatActivity() {
 
     private lateinit var editTextPost: EditText
-    private lateinit var btnAttach: ImageView
     private lateinit var btnPost: Button
     private lateinit var btnCancel: Button
     private lateinit var backButton: ImageView
@@ -35,7 +36,6 @@ class CreatePostActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_post)
 
         editTextPost = findViewById(R.id.editTextPost)
-        btnAttach = findViewById(R.id.btnAttach)
         btnPost = findViewById(R.id.btnPost)
         btnCancel = findViewById(R.id.btnCancel)
         backButton = findViewById(R.id.backButton)
@@ -52,9 +52,20 @@ class CreatePostActivity : AppCompatActivity() {
                         val fullName = "$firstName $lastName".trim()
                         usernameText.text = fullName
 
-                        val profileImageUrl = document.getString("profileImageUrl")
-                        if (!profileImageUrl.isNullOrEmpty()) {
-                            Glide.with(this).load(profileImageUrl).into(profileImageView)
+                        val avatarId = document.getString("avatarId")
+                        if (!avatarId.isNullOrEmpty()) {
+                            firestore.collection("profile_images").document(avatarId).get()
+                                .addOnSuccessListener { avatarDoc ->
+                                    val imageUrl = avatarDoc.getString("url")
+                                    if (!imageUrl.isNullOrEmpty()) {
+                                        Glide.with(this).load(imageUrl).into(profileImageView)
+                                    } else {
+                                        profileImageView.setImageResource(R.drawable.profile)
+                                    }
+                                }
+                                .addOnFailureListener {
+                                    profileImageView.setImageResource(R.drawable.profile)
+                                }
                         } else {
                             profileImageView.setImageResource(R.drawable.profile)
                         }
@@ -69,13 +80,6 @@ class CreatePostActivity : AppCompatActivity() {
 
         backButton.setOnClickListener { finish() }
         btnCancel.setOnClickListener { finish() }
-
-        btnAttach.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "*/*"
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
-            startActivityForResult(intent, 101)
-        }
 
         btnPost.setOnClickListener {
             val content = editTextPost.text.toString().trim()
@@ -115,42 +119,51 @@ class CreatePostActivity : AppCompatActivity() {
     private fun savePostToFirestore(userId: String, content: String, mediaUrl: String?) {
         firestore.collection("Users").document(userId).get()
             .addOnSuccessListener { document ->
-                if (document != null && document.exists()) {
+                if (document.exists()) {
                     val firstName = document.getString("firstName") ?: ""
                     val lastName = document.getString("lastName") ?: ""
                     val fullName = "$firstName $lastName".trim()
-                    val profileImageUrl = document.getString("profileImageUrl") ?: ""
+                    val avatarId = document.getString("avatarId")
 
+                    if (!avatarId.isNullOrEmpty()) {
+                        firestore.collection("profile_images").document(avatarId).get()
+                            .addOnSuccessListener { avatarDoc ->
+                                val profileImageUrl = avatarDoc.getString("url") ?: ""
 
-                    val post = hashMapOf(
-                        "userId" to userId,
-                        "username" to fullName,
-                        "userProfileImage" to profileImageUrl,
-                        "content" to content,
-                        "mediaUrl" to mediaUrl,
-                        "timestamp" to com.google.firebase.Timestamp.now(),
-                        "likes" to 0
-                    )
+                                val post = hashMapOf(
+                                    "userId" to userId,
+                                    "username" to fullName,
+                                    "userProfileImage" to profileImageUrl,
+                                    "content" to content,
+                                    "mediaUrl" to mediaUrl,
+                                    "timestamp" to com.google.firebase.Timestamp.now(),
+                                    "likes" to 0
+                                )
 
-                    firestore.collection("posts")
-                        .add(post)
-                        .addOnSuccessListener {
-                            Toast.makeText(this, "✅ Post created!", Toast.LENGTH_SHORT).show()
-
-                            val intent = Intent(this, PostListActivity::class.java)
-                            intent.putExtra("open_fragment", "posts")
-                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            startActivity(intent)
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(this, "❌ Failed to save post", Toast.LENGTH_SHORT).show()
-                        }
+                                firestore.collection("posts")
+                                    .add(post)
+                                    .addOnSuccessListener {
+                                        Toast.makeText(this, "✅ Post created!", Toast.LENGTH_SHORT).show()
+                                        val intent = Intent(this, PostListActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                        startActivity(intent)
+                                    }
+                                    .addOnFailureListener {
+                                        Toast.makeText(this, "Failed to save post", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "Failed to load avatar image", Toast.LENGTH_SHORT).show()
+                            }
+                    } else {
+                        Toast.makeText(this, "Avatar ID not found in user document", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(this, "❌ User document not found", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "User document not found", Toast.LENGTH_SHORT).show()
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(this, "❌ Error loading user info", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Error loading user info", Toast.LENGTH_SHORT).show()
             }
     }
 
