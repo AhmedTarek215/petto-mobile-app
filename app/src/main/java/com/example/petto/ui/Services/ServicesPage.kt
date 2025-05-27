@@ -47,6 +47,8 @@ class ServicesPage : AppCompatActivity() {
         hotelsRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         sheltersRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
 
+        //uploadHotelData()
+
         // Fetch services from Firestore
         FirebaseFirestore.getInstance().collection("services").get()
             .addOnSuccessListener { snapshot ->
@@ -74,6 +76,7 @@ class ServicesPage : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 Toast.makeText(this, "Failed to load services", Toast.LENGTH_SHORT).show()
             }
+
     }
 
     private fun openServiceProfile(service: PetService) {
@@ -81,4 +84,6 @@ class ServicesPage : AppCompatActivity() {
         intent.putExtra("service_id", service.documentId)
         startActivity(intent)
     }
+
+
 }

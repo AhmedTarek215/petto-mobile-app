@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="200dp"
+    android:layout_width="230dp"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginEnd="12dp"
     app:cardBackgroundColor="#1BBCB6"
     app:cardCornerRadius="10dp"
     app:cardElevation="4dp"
     android:layout_marginTop="7dp"
     android:layout_marginBottom="7dp"
-    android:layout_marginRight="7dp">
+    android:layout_marginRight="12.5dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,7 +19,7 @@
         <!-- Service Image -->
         <ImageView
             android:id="@+id/serviceImage"
-            android:layout_width="match_parent"
+            android:layout_width="230dp"
             android:layout_height="110dp"
             android:scaleType="centerCrop"/>
 
@@ -65,7 +64,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/serviceImage"
             android:orientation="horizontal"
-            android:padding="8dp"
+            android:padding="0dp"
+            android:layout_marginVertical="8dp"
+            android:layout_marginHorizontal="5dp"
             android:gravity="center_vertical">
 
             <TextView
@@ -73,17 +74,22 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Shelter 1"
+                android:text="Alex International for Pets"
                 android:fontFamily="@font/alexandriamedium"
-                android:layout_margin="1dp"
+                android:layout_marginVertical="1dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="0dp"
                 android:textColor="#4F576B"
                 android:textSize="14sp" />
+
 
             <ImageView
                 android:id="@+id/bookmarkIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="1dp"
+                android:layout_marginVertical="1dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginStart="1dp"
                 android:src="@drawable/save"/>
         </LinearLayout>
     </RelativeLayout>

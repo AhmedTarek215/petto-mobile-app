@@ -2,7 +2,10 @@ package com.example.petto.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +28,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var servicesRecyclerView: RecyclerView
     private lateinit var tipsRecyclerView: RecyclerView
     private lateinit var postsRecyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var contentLayout: LinearLayout
 
     private lateinit var tipAdapter: TipsAdapter
     private lateinit var postAdapter: PostAdapter
@@ -33,6 +38,10 @@ class HomeActivity : AppCompatActivity() {
     private var currentPostIndex = 0
     private var tipsList: List<Tip> = listOf()
     private var postList: List<Post> = listOf()
+
+    private var servicesLoaded = false
+    private var tipsLoaded = false
+    private var postsLoaded = false
 
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -45,6 +54,11 @@ class HomeActivity : AppCompatActivity() {
         servicesRecyclerView = findViewById(R.id.servicesRecyclerView)
         tipsRecyclerView = findViewById(R.id.tipsRecyclerView)
         postsRecyclerView = findViewById(R.id.postsRecyclerView)
+        progressBar = findViewById(R.id.progressBar)
+        contentLayout = findViewById(R.id.homeSectionsLayout)
+
+        contentLayout.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
 
         loadGreeting()
         setupPetServices()
@@ -79,6 +93,9 @@ class HomeActivity : AppCompatActivity() {
             servicesRecyclerView.layoutManager =
                 LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
             servicesRecyclerView.adapter = adapter
+
+            servicesLoaded = true
+            checkIfAllLoaded()
         }
 
         findViewById<TextView>(R.id.showAllServices).setOnClickListener {
@@ -95,6 +112,8 @@ class HomeActivity : AppCompatActivity() {
         firestore.collection("Tips").get().addOnSuccessListener { result ->
             tipsList = result.documents.mapNotNull { it.toObject(Tip::class.java) }
             showTipAt(currentTipIndex)
+            tipsLoaded = true
+            checkIfAllLoaded()
         }
 
         findViewById<TextView>(R.id.showAllTips).setOnClickListener {
@@ -138,6 +157,8 @@ class HomeActivity : AppCompatActivity() {
                 }
 
                 showPostAt(currentPostIndex)
+                postsLoaded = true
+                checkIfAllLoaded()
             }
 
         findViewById<TextView>(R.id.showAllPosts).setOnClickListener {
@@ -180,6 +201,13 @@ class HomeActivity : AppCompatActivity() {
 
         findViewById<ImageView>(R.id.nav_profile).setOnClickListener {
             startActivity(Intent(this, com.example.petto.ui.profiles.UserProfile::class.java))
+        }
+    }
+
+    private fun checkIfAllLoaded() {
+        if (servicesLoaded && tipsLoaded && postsLoaded) {
+            contentLayout.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
         }
     }
 }

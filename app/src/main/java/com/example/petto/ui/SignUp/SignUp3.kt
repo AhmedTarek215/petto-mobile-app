@@ -113,10 +113,14 @@ class SignUp3 : AppCompatActivity() {
             tvDateOfBirth.text = formattedDate
             tvDateOfBirth.setTextColor(resources.getColor(R.color.black, theme))
             tvDateOfBirth.error = null
+
+            SignUpViewModel.petBirthDate = formattedDate
+
         }, year, month, day)
 
         datePickerDialog.show()
     }
+
 
     private fun showPetImageSelectionDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_profile_image_selector, null)

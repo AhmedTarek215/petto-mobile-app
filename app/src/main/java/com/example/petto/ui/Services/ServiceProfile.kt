@@ -133,6 +133,11 @@ class ServiceProfile : AppCompatActivity() {
                             serviceWeb.text = document.getString("web") ?: ""
                             serviceLocation.text = document.getString("location") ?: ""
 
+                            // ✅ Display stored average rating (even if there are no reviews)
+                            val avgRating = document.getDouble("average_rating") ?: 0.0
+                            ratingBar.rating = avgRating.toFloat()
+                            averageRatingText.text = String.format("%.1f", avgRating)
+
                             val imageUrl = document.getString("imageUrl")
                             Glide.with(this@ServiceProfile)
                                 .asBitmap()
@@ -210,21 +215,24 @@ class ServiceProfile : AppCompatActivity() {
                         reviewsList.addAll(reviews)
                         reviewsAdapter.notifyDataSetChanged()
 
+                        // ✅ Recalculate average rating if there are reviews
                         val totalRating = reviews.sumOf { it.rating.toDouble() }
-                        val averageRating = if (reviews.isNotEmpty()) totalRating / reviews.size else 0.0
+                        val averageRating = if (reviews.isNotEmpty()) totalRating / reviews.size else null
 
-                        ratingBar.rating = averageRating.toFloat()
-                        averageRatingText.text = String.format("%.1f", averageRating)
+                        if (averageRating != null) {
+                            ratingBar.rating = averageRating.toFloat()
+                            averageRatingText.text = String.format("%.1f", averageRating)
 
-                        db.collection("services")
-                            .document(serviceId)
-                            .update("average_rating", averageRating)
-                            .addOnSuccessListener {
-                                Log.d("ServiceProfile", "Average rating updated: $averageRating")
-                            }
-                            .addOnFailureListener {
-                                Log.e("ServiceProfile", "Failed to update rating: ${it.message}")
-                            }
+                            db.collection("services")
+                                .document(serviceId)
+                                .update("average_rating", averageRating)
+                                .addOnSuccessListener {
+                                    Log.d("ServiceProfile", "Average rating updated: $averageRating")
+                                }
+                                .addOnFailureListener {
+                                    Log.e("ServiceProfile", "Failed to update rating: ${it.message}")
+                                }
+                        }
                     }
                     .addOnFailureListener {
                         showError("Failed to load reviews.")
@@ -235,6 +243,7 @@ class ServiceProfile : AppCompatActivity() {
             }
         }
     }
+
 
     private fun showReviewDialog() {
         val dialog = ReviewDialog(this, object : ReviewDialog.ReviewSubmitListener {

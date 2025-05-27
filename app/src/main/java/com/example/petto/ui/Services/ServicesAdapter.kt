@@ -39,7 +39,7 @@ class ServicesAdapter(
             .load(service.imageUrl)
             .into(object : com.bumptech.glide.request.target.CustomTarget<android.graphics.Bitmap>() {
                 override fun onResourceReady(resource: android.graphics.Bitmap, transition: com.bumptech.glide.request.transition.Transition<in android.graphics.Bitmap>?) {
-                    val resized = android.graphics.Bitmap.createScaledBitmap(resource, 250, 110, true)
+                    val resized = android.graphics.Bitmap.createScaledBitmap(resource, 230, 110, true)
                     holder.image.setImageBitmap(resized)
                 }
 

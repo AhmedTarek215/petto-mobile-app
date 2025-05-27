@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
+    android:paddingVertical="5dp"
+    android:paddingHorizontal="6dp"
     android:background="#FBFBFF">
 
     <!-- Toolbar -->
@@ -63,6 +64,27 @@
                 android:visibility="visible"
                 android:orientation="vertical">
 
+                <!-- Shops -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pet Shops"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/alexandriabold"
+                    android:textColor="#4F576B"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="2dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/shopsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="22dp"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    android:paddingEnd="8dp"
+                    android:scrollbars="none" />
+
                 <!-- Clinics -->
                 <TextView
                     android:layout_width="wrap_content"
@@ -71,13 +93,14 @@
                     android:textSize="18sp"
                     android:fontFamily="@font/alexandriabold"
                     android:textColor="#4F576B"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="2dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/clinicsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="22dp"
                     android:clipToPadding="false"
                     android:overScrollMode="never"
                     android:paddingEnd="8dp"
@@ -91,13 +114,14 @@
                     android:textSize="18sp"
                     android:fontFamily="@font/alexandriabold"
                     android:textColor="#4F576B"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="2dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/hotelsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="22dp"
                     android:clipToPadding="false"
                     android:overScrollMode="never"
                     android:paddingEnd="8dp"
@@ -111,7 +135,8 @@
                     android:textSize="18sp"
                     android:fontFamily="@font/alexandriabold"
                     android:textColor="#4F576B"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="2dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/sheltersRecyclerView"
