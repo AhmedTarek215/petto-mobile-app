@@ -21,7 +21,7 @@ import com.example.petto.ui.tips.TipsAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-
+import com.example.petto.ui.calender.Calendar
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var greetingText: TextView
@@ -188,7 +188,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setupNavigation() {
         findViewById<ImageView>(R.id.nav_calendar).setOnClickListener {
-            startActivity(Intent(this, com.example.petto.ui.calender.calender::class.java))
+            startActivity(Intent(this, com.example.petto.ui.calender.Calendar::class.java))
         }
 
         findViewById<ImageView>(R.id.fab).setOnClickListener {

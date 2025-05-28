@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.petto.R
 import com.example.petto.ui.HomeActivity
-import com.example.petto.ui.calender.calender
+import com.example.petto.ui.calender.Calendar
 import com.example.petto.ui.notification.NotificationActivity
 import com.example.petto.ui.post.CreatePostActivity
 import com.example.petto.ui.post.MyPostsActivity
@@ -80,7 +80,7 @@ class UserProfile : AppCompatActivity() {
         }
 
         navCalendar.setOnClickListener {
-            startActivity(Intent(this, calender::class.java))
+            startActivity(Intent(this, Calendar::class.java))
             finish()
         }
 

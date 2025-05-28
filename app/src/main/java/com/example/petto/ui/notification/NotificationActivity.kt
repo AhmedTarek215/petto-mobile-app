@@ -64,7 +64,7 @@ class NotificationActivity : AppCompatActivity() {
         }
 
         navCalendar.setOnClickListener {
-            startActivity(Intent(this, com.example.petto.ui.calender.calender::class.java))
+            startActivity(Intent(this, com.example.petto.ui.calender.Calendar::class.java))
             finish()
         }
 
