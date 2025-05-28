@@ -197,7 +197,7 @@ class PetProfile : AppCompatActivity() {
 
     private fun formatAge(dob: String): String {
         return try {
-            val format = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+            val format = SimpleDateFormat("dd/MM/yyyy", Locale.US)
             val birthDate = format.parse(dob) ?: return ""
             val now = Calendar.getInstance()
             val birthCal = Calendar.getInstance().apply { time = birthDate }
