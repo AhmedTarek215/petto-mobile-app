@@ -2,6 +2,7 @@ package com.example.petto.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -13,21 +14,32 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.petto.R
 import com.example.petto.data.model.PetService
 import com.example.petto.data.model.Post
+import com.example.petto.data.model.Reminder
 import com.example.petto.data.model.Tip
 import com.example.petto.ui.Services.ServiceProfile
 import com.example.petto.ui.Services.ServicesAdapter
+import com.example.petto.ui.calender.AddReminder
+import com.example.petto.ui.calender.ReminderAdapter
+import com.example.petto.ui.notification.NotificationActivity
+import com.example.petto.ui.post.CreatePostActivity
 import com.example.petto.ui.post.PostAdapter
+import com.example.petto.ui.profiles.UserProfile
 import com.example.petto.ui.tips.TipsAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.example.petto.ui.calender.Calendar
+
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var greetingText: TextView
     private lateinit var servicesRecyclerView: RecyclerView
     private lateinit var tipsRecyclerView: RecyclerView
     private lateinit var postsRecyclerView: RecyclerView
+    private lateinit var reminderRecyclerView: RecyclerView
+    private lateinit var reminderAdapter: ReminderAdapter
+    private lateinit var noRemindersText: TextView
+
+
     private lateinit var progressBar: ProgressBar
     private lateinit var contentLayout: LinearLayout
 
@@ -36,8 +48,11 @@ class HomeActivity : AppCompatActivity() {
 
     private var currentTipIndex = 0
     private var currentPostIndex = 0
+    private var currentReminderIndex = 0
+
     private var tipsList: List<Tip> = listOf()
     private var postList: List<Post> = listOf()
+    private var remindersList: List<Reminder> = listOf()
 
     private var servicesLoaded = false
     private var tipsLoaded = false
@@ -54,17 +69,59 @@ class HomeActivity : AppCompatActivity() {
         servicesRecyclerView = findViewById(R.id.servicesRecyclerView)
         tipsRecyclerView = findViewById(R.id.tipsRecyclerView)
         postsRecyclerView = findViewById(R.id.postsRecyclerView)
+        reminderRecyclerView = findViewById(R.id.reminderRecyclerView)
+        noRemindersText = findViewById(R.id.noRemindersText)
+
+
         progressBar = findViewById(R.id.progressBar)
         contentLayout = findViewById(R.id.homeSectionsLayout)
+
+        reminderAdapter = ReminderAdapter(emptyList())
+        reminderRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        reminderRecyclerView.adapter = reminderAdapter
 
         contentLayout.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
 
         loadGreeting()
+        setupUpcomingReminders()
         setupPetServices()
         setupTips()
         setupPosts()
         setupNavigation()
+
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val firestore = FirebaseFirestore.getInstance()
+
+        val userRef = firestore.collection("Users").document(userId)
+
+        userRef.get()
+            .addOnSuccessListener { doc ->
+                if (!doc.exists()) return@addOnSuccessListener
+
+                firestore.collection("Users").document(userId).collection("pets")
+                    .get()
+                    .addOnSuccessListener { petsSnapshot ->
+                        if (!petsSnapshot.isEmpty) {
+                            Log.d("MIGRATION", "Pets already migrated.")
+                            return@addOnSuccessListener
+                        }
+
+                        val oldPet = doc.get("pet") as? Map<*, *> ?: return@addOnSuccessListener
+
+                        firestore.collection("Users").document(userId)
+                            .collection("pets")
+                            .add(oldPet)
+                            .addOnSuccessListener {
+                                Log.d("MIGRATION", "Pet migrated to /pets")
+                                userRef.update("pet", com.google.firebase.firestore.FieldValue.delete())
+                            }
+                            .addOnFailureListener {
+                                Log.e("MIGRATION", "Failed: ${it.message}")
+                            }
+                    }
+            }
+
     }
 
     private fun loadGreeting() {
@@ -75,6 +132,48 @@ class HomeActivity : AppCompatActivity() {
                 greetingText.text = "Hello $firstName!"
             }
     }
+
+    private fun setupUpcomingReminders() {
+        val userId = auth.currentUser?.uid ?: return
+        firestore.collection("reminders")
+            .whereEqualTo("user_id", userId)
+            .get()
+            .addOnSuccessListener { result ->
+                val now = com.google.firebase.Timestamp.now().toDate()
+
+                remindersList = result.documents.mapNotNull { it.toObject(Reminder::class.java) }
+                    .filter { it.r_date?.toDate()?.after(now) == true }
+                    .sortedBy { it.r_date?.toDate() }
+
+                if (remindersList.isNotEmpty()) {
+                    noRemindersText.visibility = View.GONE
+                    reminderRecyclerView.visibility = View.VISIBLE
+                    reminderAdapter.updateReminders(listOf(remindersList[currentReminderIndex]))
+                } else {
+                    reminderRecyclerView.visibility = View.GONE
+                    noRemindersText.visibility = View.VISIBLE
+                }
+
+                findViewById<ImageView>(R.id.reminderLeftArrow).setOnClickListener {
+                    if (currentReminderIndex > 0) {
+                        currentReminderIndex--
+                        reminderAdapter.updateReminders(listOf(remindersList[currentReminderIndex]))
+                    }
+                }
+
+                findViewById<ImageView>(R.id.reminderRightArrow).setOnClickListener {
+                    if (currentReminderIndex < remindersList.size - 1) {
+                        currentReminderIndex++
+                        reminderAdapter.updateReminders(listOf(remindersList[currentReminderIndex]))
+                    }
+                }
+
+                findViewById<ImageView>(R.id.addReminderBtn).setOnClickListener {
+                    startActivity(Intent(this, AddReminder::class.java))
+                }
+            }
+    }
+
 
     private fun setupPetServices() {
         firestore.collection("services").get().addOnSuccessListener { result ->
@@ -90,8 +189,7 @@ class HomeActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-            servicesRecyclerView.layoutManager =
-                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            servicesRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
             servicesRecyclerView.adapter = adapter
 
             servicesLoaded = true
@@ -105,8 +203,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setupTips() {
         tipAdapter = TipsAdapter(listOf())
-        tipsRecyclerView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        tipsRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         tipsRecyclerView.adapter = tipAdapter
 
         firestore.collection("Tips").get().addOnSuccessListener { result ->
@@ -143,8 +240,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setupPosts() {
         postAdapter = PostAdapter(listOf())
-        postsRecyclerView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        postsRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         postsRecyclerView.adapter = postAdapter
 
         firestore.collection("posts")
@@ -192,15 +288,15 @@ class HomeActivity : AppCompatActivity() {
         }
 
         findViewById<ImageView>(R.id.fab).setOnClickListener {
-            startActivity(Intent(this, com.example.petto.ui.post.CreatePostActivity::class.java))
+            startActivity(Intent(this, CreatePostActivity::class.java))
         }
 
         findViewById<ImageView>(R.id.nav_notifications).setOnClickListener {
-            startActivity(Intent(this, com.example.petto.ui.notification.NotificationActivity::class.java))
+            startActivity(Intent(this, NotificationActivity::class.java))
         }
 
         findViewById<ImageView>(R.id.nav_profile).setOnClickListener {
-            startActivity(Intent(this, com.example.petto.ui.profiles.UserProfile::class.java))
+            startActivity(Intent(this, UserProfile::class.java))
         }
     }
 

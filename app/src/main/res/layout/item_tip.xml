@@ -42,6 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tip content goes here..."
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textSize="14sp"
             android:fontFamily="@font/alexandriaregular"
             android:textColor="#9D9D9D"

@@ -17,7 +17,6 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.petto.R
-import com.example.petto.ui.calender.ReminderWorker
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -102,25 +101,26 @@ class AddReminder : AppCompatActivity() {
 
         firestore.collection("Users")
             .document(currentUserId)
+            .collection("pets")
             .get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    val petMap = document.get("pet") as? Map<*, *>
-                    val petName = petMap?.get("name") as? String
-                    if (!petName.isNullOrEmpty()) {
-                        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, listOf(petName))
-                        petDropdown.setAdapter(adapter)
-                    } else {
-                        Toast.makeText(this, "No pet name found", Toast.LENGTH_SHORT).show()
-                    }
+            .addOnSuccessListener { result ->
+                val petNames = result.mapNotNull { it.getString("name") }
+
+                if (petNames.isNotEmpty()) {
+                    val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, petNames)
+                    petDropdown.setAdapter(adapter)
+                } else {
+                    Toast.makeText(this, "No pets found", Toast.LENGTH_SHORT).show()
                 }
+
                 progressOverlay.visibility = View.GONE
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Failed to load pet name", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Failed to load pets", Toast.LENGTH_SHORT).show()
                 progressOverlay.visibility = View.GONE
             }
     }
+
 
     private fun setupEventTypeDropdown() {
         val types = listOf("Vaccine", "Checkup", "Grooming", "Training", "Surgery", "Deworming")

@@ -148,7 +148,8 @@ class SignUp3 : AppCompatActivity() {
                         scaleType = ImageView.ScaleType.CENTER_CROP
                     }
 
-                    Glide.with(this).load(url).into(imageView)
+                    Glide.with(dialogView).load(url).into(imageView)
+
 
                     imageView.setOnClickListener {
                         selectedPetImageUrl = url

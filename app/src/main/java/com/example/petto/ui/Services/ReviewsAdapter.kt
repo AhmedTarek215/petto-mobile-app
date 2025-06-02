@@ -72,7 +72,7 @@ class ReviewsAdapter(private val reviewList: List<Review>) :
             days == 1L -> "Yesterday"
             days < 7 -> "$days day${if (days != 1L) "s" else ""} ago"
             else -> {
-                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
                 sdf.format(Date(timestamp))
             }
         }

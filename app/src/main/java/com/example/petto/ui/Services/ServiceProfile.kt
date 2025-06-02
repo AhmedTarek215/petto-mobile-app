@@ -3,7 +3,6 @@ package com.example.petto.ui.Services
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -133,7 +132,6 @@ class ServiceProfile : AppCompatActivity() {
                             serviceWeb.text = document.getString("web") ?: ""
                             serviceLocation.text = document.getString("location") ?: ""
 
-                            // ✅ Display stored average rating (even if there are no reviews)
                             val avgRating = document.getDouble("average_rating") ?: 0.0
                             ratingBar.rating = avgRating.toFloat()
                             averageRatingText.text = String.format("%.1f", avgRating)
@@ -215,7 +213,11 @@ class ServiceProfile : AppCompatActivity() {
                         reviewsList.addAll(reviews)
                         reviewsAdapter.notifyDataSetChanged()
 
-                        // ✅ Recalculate average rating if there are reviews
+                        val emptyTextView = findViewById<TextView>(R.id.emptyReviewsText)
+                        emptyTextView.visibility = if (reviewsList.isEmpty()) View.VISIBLE else View.GONE
+                        reviewsRecyclerView.visibility = if (reviewsList.isEmpty()) View.GONE else View.VISIBLE
+
+
                         val totalRating = reviews.sumOf { it.rating.toDouble() }
                         val averageRating = if (reviews.isNotEmpty()) totalRating / reviews.size else null
 
@@ -226,12 +228,6 @@ class ServiceProfile : AppCompatActivity() {
                             db.collection("services")
                                 .document(serviceId)
                                 .update("average_rating", averageRating)
-                                .addOnSuccessListener {
-                                    Log.d("ServiceProfile", "Average rating updated: $averageRating")
-                                }
-                                .addOnFailureListener {
-                                    Log.e("ServiceProfile", "Failed to update rating: ${it.message}")
-                                }
                         }
                     }
                     .addOnFailureListener {
@@ -243,7 +239,6 @@ class ServiceProfile : AppCompatActivity() {
             }
         }
     }
-
 
     private fun showReviewDialog() {
         val dialog = ReviewDialog(this, object : ReviewDialog.ReviewSubmitListener {
@@ -258,44 +253,66 @@ class ServiceProfile : AppCompatActivity() {
                     .addOnSuccessListener { userDoc ->
                         val fname = userDoc.getString("firstName") ?: ""
                         val lname = userDoc.getString("lastName") ?: ""
-                        val profileImageUrl = userDoc.getString("profileImageUrl") ?: ""
+                        val avatarId = userDoc.getString("avatarId")
 
-                        val reviewData = hashMapOf(
-                            "rating" to rating.toDouble(),
-                            "text" to (text ?: ""),
-                            "timestamp" to Timestamp.now(),
-                            "user" to hashMapOf(
-                                "user_id" to userId,
-                                "fname" to fname,
-                                "lname" to lname,
-                                "profileImageUrl" to profileImageUrl
-                            )
-                        )
-
-                        db.collection("services")
-                            .document(selectedServiceId)
-                            .collection("reviews")
-                            .add(reviewData)
-                            .addOnSuccessListener {
-                                Toast.makeText(this@ServiceProfile, "Review submitted!", Toast.LENGTH_SHORT).show()
-                                loadServiceData(selectedServiceId)
-                                loadingIndicator.visibility = View.GONE
-                                contentLayout.visibility = View.VISIBLE
-                            }
-                            .addOnFailureListener {
-                                showError("Failed to submit review.")
-                                loadingIndicator.visibility = View.GONE
-                                contentLayout.visibility = View.VISIBLE
-                            }
+                        if (!avatarId.isNullOrEmpty()) {
+                            db.collection("profile_images").document(avatarId).get()
+                                .addOnSuccessListener { avatarDoc ->
+                                    val profileImageUrl = avatarDoc.getString("url") ?: ""
+                                    submitReview(userId, fname, lname, profileImageUrl, rating, text)
+                                }
+                                .addOnFailureListener {
+                                    submitReview(userId, fname, lname, "", rating, text)
+                                }
+                        } else {
+                            submitReview(userId, fname, lname, "", rating, text)
+                        }
                     }
                     .addOnFailureListener {
                         showError("Failed to fetch user info.")
                         loadingIndicator.visibility = View.GONE
-                        contentLayout.visibility = View.VISIBLE
+                        contentLayout.visibility = View.GONE
                     }
             }
         })
         dialog.show()
+    }
+
+    private fun submitReview(
+        userId: String,
+        fname: String,
+        lname: String,
+        profileImageUrl: String,
+        rating: Float,
+        comment: String?
+    ) {
+        val reviewData = hashMapOf(
+            "rating" to rating.toDouble(),
+            "text" to (comment ?: ""),
+            "timestamp" to Timestamp.now(),
+            "user" to hashMapOf(
+                "user_id" to userId,
+                "fname" to fname,
+                "lname" to lname,
+                "profileImageUrl" to profileImageUrl
+            )
+        )
+
+        db.collection("services")
+            .document(selectedServiceId)
+            .collection("reviews")
+            .add(reviewData)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Review submitted!", Toast.LENGTH_SHORT).show()
+                loadServiceData(selectedServiceId)
+                loadingIndicator.visibility = View.GONE
+                contentLayout.visibility = View.VISIBLE
+            }
+            .addOnFailureListener {
+                showError("Failed to submit review.")
+                loadingIndicator.visibility = View.GONE
+                contentLayout.visibility = View.VISIBLE
+            }
     }
 
     private fun showError(message: String) {

@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#FBFBFF">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:id="@+id/headerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:clickable="true"
+                android:contentDescription="Back"
+                android:focusable="true"
+                android:src="@drawable/back"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <TextView
+                android:id="@+id/Title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/alexandriabold"
+                android:text="Add New Petto !"
+                android:textColor="#4F576B"
+                android:textSize="25sp"
+                android:gravity="center_horizontal" />
+        </LinearLayout>
+
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImage"
+            android:layout_width="135dp"
+            android:layout_height="135dp"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/pet_care"
+            app:layout_constraintTop_toBottomOf="@id/headerLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/btnImportPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="132dp"
+            android:layout_marginTop="152dp"
+            android:src="@drawable/camera"
+            android:background="@android:color/transparent"
+            app:layout_constraintStart_toStartOf="@+id/profileImage"
+            app:layout_constraintTop_toBottomOf="@+id/headerLayout" />
+
+        <!-- Name, Gender, DOB Section -->
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="15dp"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintTop_toBottomOf="@id/btnImportPhoto"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/NameTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="4dp"
+                android:textColor="#4F576B"
+                android:textSize="17sp"
+                android:fontFamily="@font/alexandriasemibold" />
+
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_outline"
+                android:hint="Mr. Cuddles"
+                android:padding="11dp"
+                android:fontFamily="@font/alexandriaregular"
+                android:textColor="#4F576B"
+                android:textColorHint="#A9A9A9" />
+
+            <!-- Gender Row -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:id="@+id/GenderTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gender"
+                    android:layout_marginStart="8dp"
+                    android:textColor="#4F576B"
+                    android:textSize="17sp"
+                    android:fontFamily="@font/alexandriasemibold" />
+
+                <TextView
+                    android:id="@+id/genderError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text=""
+                    android:textColor="@android:color/holo_red_dark"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Gender RadioButtons -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp">
+
+                <RadioButton
+                    android:id="@+id/radioMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Male"
+                    android:textSize="16sp"
+                    android:textColor="#4F576B"
+                    android:fontFamily="@font/alexandriamedium"
+                    android:drawableStart="@drawable/male"
+                    android:drawablePadding="8dp" />
+
+                <Space android:layout_width="40dp" android:layout_height="wrap_content" />
+
+                <RadioButton
+                    android:id="@+id/radioFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Female"
+                    android:textSize="16sp"
+                    android:textColor="#4F576B"
+                    android:fontFamily="@font/alexandriamedium"
+                    android:drawableStart="@drawable/female"
+                    android:drawablePadding="8dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/DOBTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Date Of Birth"
+                android:layout_marginStart="8dp"
+                android:textColor="#4F576B"
+                android:textSize="17sp"
+                android:fontFamily="@font/alexandriasemibold" />
+
+            <LinearLayout
+                android:id="@+id/datePickerContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="11dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/edittext_outline"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/calendar" />
+
+                <TextView
+                    android:id="@+id/tvDateOfBirth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:text="Select Date"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/alexandriaregular"
+                    android:textColor="#4F576B" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Additional Info Section -->
+        <LinearLayout
+            android:id="@+id/linearLayout6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+
+            <!-- Pet Type -->
+            <TextView
+                android:id="@+id/TypeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pet Type"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="4dp"
+                android:textColor="#4F576B"
+                android:textSize="17sp"
+                android:fontFamily="@font/alexandriasemibold" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="#A9A9A9"
+                app:endIconMode="dropdown_menu">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_outline"
+                    android:fontFamily="@font/alexandriaregular"
+                    android:hint="Pet Type"
+                    android:inputType="none"
+                    android:padding="11dp"
+                    android:textColor="#4F576B"
+                    android:textColorHint="#A9A9A9"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Breed -->
+            <TextView
+                android:id="@+id/BreedTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Breed"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="2dp"
+                android:textColor="#4F576B"
+                android:textSize="17sp"
+                android:fontFamily="@font/alexandriasemibold" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="#A9A9A9"
+                app:endIconMode="dropdown_menu">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerBreed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_outline"
+                    android:fontFamily="@font/alexandriaregular"
+                    android:hint="Breed"
+                    android:inputType="none"
+                    android:padding="11dp"
+                    android:textColor="#4F576B"
+                    android:textColorHint="#A9A9A9"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Weight and Height Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="24dp">
+
+                <!-- Weight -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/WeightTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Weight"
+                        android:layout_marginStart="8dp"
+                        android:textColor="#4F576B"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/alexandriasemibold" />
+
+                    <EditText
+                        android:id="@+id/etWeight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/edittext_outline"
+                        android:hint="In K.G"
+                        android:padding="11dp"
+                        android:fontFamily="@font/alexandriaregular"
+                        android:textColor="#4F576B"
+                        android:textColorHint="#A9A9A9" />
+                </LinearLayout>
+
+                <Space android:layout_width="24dp" android:layout_height="wrap_content" />
+
+                <!-- Height -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/HeightTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Height"
+                        android:textColor="#4F576B"
+                        android:layout_marginStart="8dp"
+                        android:textSize="17sp"
+                        android:fontFamily="@font/alexandriasemibold" />
+
+                    <EditText
+                        android:id="@+id/etHeight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/edittext_outline"
+                        android:hint="In Inches"
+                        android:padding="11dp"
+                        android:fontFamily="@font/alexandriaregular"
+                        android:textColor="#4F576B"
+                        android:textColorHint="#A9A9A9" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Color -->
+            <TextView
+                android:id="@+id/ColorTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Color"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="8dp"
+                android:textColor="#4F576B"
+                android:textSize="17sp"
+                android:fontFamily="@font/alexandriasemibold" />
+
+            <EditText
+                android:id="@+id/etColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/edittext_outline"
+                android:hint="Salted Purple Rain"
+                android:padding="11dp"
+                android:fontFamily="@font/alexandriaregular"
+                android:textColor="#4F576B"
+                android:textColorHint="#A9A9A9" />
+        </LinearLayout>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingHorizontal="36dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginVertical="3dp"
+                android:paddingHorizontal="28dp"
+                android:background="@drawable/pink_outline"
+                android:text="Cancel"
+                android:textColor="#D16B78"
+                android:textSize="18sp"
+                android:fontFamily="@font/alexandriasemibold" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnDone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginVertical="4dp"
+                android:paddingHorizontal="40dp"
+                android:background="@drawable/pink_pill"
+                android:text="Done"
+                android:textColor="#FBFBFF"
+                android:textSize="18sp"
+                android:fontFamily="@font/alexandriasemibold" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

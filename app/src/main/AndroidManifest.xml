@@ -41,6 +41,7 @@
         <activity android:name=".ui.post.EditPostActivity" android:exported="true" />
         <activity android:name=".ui.profiles.UserProfile" android:exported="true" />
         <activity android:name=".ui.profiles.PetProfile" android:exported="true" />
+        <activity android:name=".ui.profiles.AddPetActivity" />
         <activity android:name=".ui.profiles.AboutUsActivity" android:exported="true" />
         <activity android:name=".ui.profiles.HelpActivity" android:exported="true" />
         <activity android:name=".ui.profiles.PrivacyActivity" android:exported="true" />

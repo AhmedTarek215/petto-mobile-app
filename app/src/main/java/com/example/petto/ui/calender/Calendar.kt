@@ -2,7 +2,6 @@ package com.example.petto.ui.calender
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -17,7 +16,10 @@ import com.example.petto.ui.post.CreatePostActivity
 import com.example.petto.ui.profiles.UserProfile
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.prolificinteractive.materialcalendarview.*
+import com.prolificinteractive.materialcalendarview.CalendarDay
+import com.prolificinteractive.materialcalendarview.DayViewDecorator
+import com.prolificinteractive.materialcalendarview.DayViewFacade
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
 import java.time.LocalDate
 import java.time.ZoneId
@@ -28,6 +30,7 @@ class Calendar : AppCompatActivity() {
     private lateinit var reminderRecyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var reminderAdapter: ReminderAdapter
+    private lateinit var backButton: ImageView
 
     private val allReminders = mutableListOf<Reminder>()
     private val auth = FirebaseAuth.getInstance()
@@ -40,13 +43,16 @@ class Calendar : AppCompatActivity() {
         calendarView = findViewById(R.id.calendarView)
         reminderRecyclerView = findViewById(R.id.reminderRecyclerView)
         progressBar = findViewById(R.id.progressBar)
+        backButton = findViewById(R.id.back_icon)
 
         reminderRecyclerView.layoutManager = LinearLayoutManager(this)
         reminderAdapter = ReminderAdapter(emptyList())
         reminderRecyclerView.adapter = reminderAdapter
 
         calendarView.selectedDate = CalendarDay.today()
+        calendarView.setOnDateChangedListener { _, _, _ -> }
 
+        decorateToday()
         setupNavigation()
         loadReminders()
 
@@ -55,8 +61,8 @@ class Calendar : AppCompatActivity() {
             finish()
         }
 
-        calendarView.setOnDateChangedListener { _, date, _ ->
-            filterRemindersByDate(date)
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 
@@ -65,9 +71,7 @@ class Calendar : AppCompatActivity() {
             startActivity(Intent(this, HomeActivity::class.java))
             finish()
         }
-        findViewById<ImageView>(R.id.nav_calendar).setOnClickListener {
-            // Already here
-        }
+        findViewById<ImageView>(R.id.nav_calendar).setOnClickListener { }
         findViewById<ImageView>(R.id.fab).setOnClickListener {
             startActivity(Intent(this, CreatePostActivity::class.java))
             finish()
@@ -91,31 +95,35 @@ class Calendar : AppCompatActivity() {
             .addOnSuccessListener { snapshot ->
                 allReminders.clear()
                 val dotDates = mutableSetOf<CalendarDay>()
+                val today = LocalDate.now()
 
                 snapshot.documents.forEach { doc ->
                     val reminder = doc.toObject(Reminder::class.java)
                     val timestamp = reminder?.r_date
 
                     if (reminder != null && timestamp != null) {
-                        allReminders.add(reminder)
-
                         val localDate = timestamp.toDate().toInstant()
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate()
 
-                        val calendarDay = CalendarDay.from(
-                            localDate.year,
-                            localDate.monthValue - 1,
-                            localDate.dayOfMonth
-                        )
+                        if (!localDate.isBefore(today)) {
+                            allReminders.add(reminder)
 
-                        dotDates.add(calendarDay)
+                            val calendarDay = CalendarDay.from(
+                                localDate.year,
+                                localDate.monthValue,
+                                localDate.dayOfMonth
+                            )
+                            dotDates.add(calendarDay)
+                        }
                     }
                 }
 
                 progressBar.visibility = View.GONE
                 decorateCalendarWithDots(dotDates)
-                filterRemindersByDate(CalendarDay.today())
+
+                val sortedReminders = allReminders.sortedBy { it.r_date?.toDate() }
+                reminderAdapter.updateReminders(sortedReminders)
             }
             .addOnFailureListener {
                 progressBar.visibility = View.GONE
@@ -131,22 +139,14 @@ class Calendar : AppCompatActivity() {
         })
     }
 
-    private fun filterRemindersByDate(date: CalendarDay) {
-        val filtered = allReminders.filter {
-            val reminderDate = it.r_date?.toDate()?.toInstant()
-                ?.atZone(ZoneId.systemDefault())
-                ?.toLocalDate()
+    private fun decorateToday() {
+        val today = CalendarDay.today()
 
-            if (reminderDate != null) {
-                Log.d("ReminderMatch", "Reminder: $reminderDate vs Selected: ${date.date}")
+        calendarView.addDecorator(object : DayViewDecorator {
+            override fun shouldDecorate(day: CalendarDay): Boolean = day == today
+            override fun decorate(view: DayViewFacade) {
+                view.setSelectionDrawable(getDrawable(R.drawable.selector_today)!!)
             }
-
-            reminderDate != null &&
-                    reminderDate.year == date.year &&
-                    reminderDate.monthValue == date.month + 1 &&
-                    reminderDate.dayOfMonth == date.day
-        }
-
-        reminderAdapter.updateReminders(filtered)
+        })
     }
 }

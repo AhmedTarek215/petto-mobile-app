@@ -48,7 +48,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginVertical="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="19dp"
                     android:fontFamily="@font/alexandriasemibold"
                     android:text="Hello First name !"
                     android:textColor="#4F576B"
@@ -58,13 +59,13 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="1dp">
 
                     <TextView
                         android:id="@+id/upcomingEventsTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="8dp"
+                        android:layout_marginVertical="0dp"
                         android:fontFamily="@font/alexandriamedium"
                         android:text="Up coming events"
                         android:textColor="#4F576B"
@@ -75,7 +76,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginVertical="12dp"
+                        android:layout_marginTop="4.5dp"
                         android:layout_marginEnd="8dp"
                         android:contentDescription="Add"
                         android:src="@drawable/add" />
@@ -84,7 +85,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginTop="6dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -92,6 +94,7 @@
                         android:id="@+id/reminderLeftArrow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:src="@drawable/left" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -100,13 +103,30 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:clipToPadding="false"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp" />
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginHorizontal="2dp"
+                        android:layout_marginBottom="3dp"
+                        android:paddingHorizontal="1dp" />
+
+                    <TextView
+                        android:id="@+id/noRemindersText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="81dp"
+                        android:layout_marginVertical="1dp"
+                        android:gravity="center"
+                        android:text="No up coming events"
+                        android:textColor="#4F576B"
+                        android:visibility="gone"
+                        android:fontFamily="@font/alexandriasemibold"
+                        android:textSize="16sp"/>
+
 
                     <ImageView
                         android:id="@+id/reminderRightArrow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:src="@drawable/right" />
                 </LinearLayout>
 
@@ -143,7 +163,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="25dp"
                     android:clipToPadding="false"
                     android:orientation="horizontal" />
 
@@ -179,7 +199,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="25dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -295,7 +315,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/calendar_pink" />
+                android:src="@drawable/cal" />
 
             <View
                 android:layout_width="0dp"

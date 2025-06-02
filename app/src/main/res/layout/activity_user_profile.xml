@@ -318,7 +318,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/calendar_pink" />
+                android:src="@drawable/cal" />
 
             <View
                 android:layout_width="0dp"

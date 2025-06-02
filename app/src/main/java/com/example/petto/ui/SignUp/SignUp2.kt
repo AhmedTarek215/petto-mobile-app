@@ -59,7 +59,17 @@ class SignUp2 : AppCompatActivity() {
 
         SignUpViewModel.profileImageUrl?.let { url ->
             selectedImageUrl = url
-            Glide.with(this).load(url).into(profileImage)
+            SignUpViewModel.profileImageUrl?.let { url ->
+                selectedImageUrl = url
+                profileImage.post {
+                    Glide.with(this)
+                        .load(url)
+                        .centerCrop()
+                        .circleCrop()
+                        .into(profileImage)
+                }
+            }
+
         }
 
         btnImportPhoto.setOnClickListener {
@@ -168,19 +178,21 @@ class SignUp2 : AppCompatActivity() {
                         scaleType = ImageView.ScaleType.CENTER_CROP
                     }
 
-                    Glide.with(this).load(url).into(imageView)
+                    Glide.with(dialogView).load(url).into(imageView)
+
 
                     imageView.setOnClickListener {
                         selectedImageUrl = url
-                        Glide.with(this).load(url).into(profileImage)
+                        Glide.with(this).load(url).centerCrop().circleCrop().into(profileImage)
                         dialog.dismiss()
                     }
 
                     gridLayout.addView(imageView)
                 }
             }
-            .addOnFailureListener {
-                Toast.makeText(this, "Could not load images.", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener {e ->
+                Toast.makeText(this, "Could not load images: ${e.message}", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
             }
     }
 }

@@ -16,35 +16,56 @@
         android:paddingBottom="90dp"
         tools:ignore="ExtraText">
 
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:id="@+id/linear"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|top"
-            android:layout_margin="8dp"
-            android:background="@drawable/back"
-            android:contentDescription="Back"
-            android:clickable="true"
-            android:focusable="true"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:orientation="horizontal"
             android:padding="8dp"
-            android:scaleType="centerInside"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.016"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.03" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/back"
+                android:clickable="true"
+                android:contentDescription="Back"
+                android:focusable="true"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <Spinner
+                android:id="@+id/petSelector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_weight="1"
+                android:backgroundTint="#888888"
+                android:gravity="center"
+                android:textAlignment="center"
+                tools:ignore="TouchTargetSizeCheck" />
+        </LinearLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileImageView"
             android:layout_width="135dp"
             android:layout_height="135dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="30dp"
             android:contentDescription="Profile Picture"
             android:src="@drawable/pet_care"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/linear"
+            />
 
         <EditText
             android:id="@+id/name"
@@ -60,10 +81,11 @@
             app:layout_constraintTop_toBottomOf="@+id/profileImageView" />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="16dp"
             android:layout_marginHorizontal="12dp"
+            android:layout_marginVertical="16dp"
             android:backgroundTint="#1BBCB6"
             app:cardCornerRadius="24dp"
             app:cardElevation="4dp"
@@ -85,17 +107,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="27dp"
                     android:layout_marginTop="24dp"
+                    app:cardBackgroundColor="#FBFBFF"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp"
-                    app:cardBackgroundColor="#FBFBFF"
                     app:layout_constraintWidth_percent="0.45">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="5dp"
-                        android:gravity="center">
+                        android:padding="5dp">
 
                         <!-- Title + Icon Row -->
                         <LinearLayout
@@ -109,10 +131,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="25dp"
+                                android:fontFamily="@font/alexandriasemibold"
                                 android:text="Breed"
                                 android:textColor="#85B5A1"
-                                android:textSize="15sp"
-                                android:fontFamily="@font/alexandriasemibold" />
+                                android:textSize="15sp" />
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -125,13 +147,14 @@
                             android:id="@+id/breed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Persian cat"
-                            android:hint="Breed"
+                            android:layout_marginTop="2dp"
                             android:background="@null"
+                            android:fontFamily="@font/alexandriasemibold"
+                            android:hint="Breed"
+                            android:text="Persian cat"
                             android:textColor="#4F576B"
                             android:textSize="18sp"
-                            android:fontFamily="@font/alexandriasemibold"
-                            android:layout_marginTop="2dp"/>
+                            tools:ignore="TouchTargetSizeCheck" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -140,17 +163,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="50dp"
                     android:layout_marginTop="24dp"
+                    app:cardBackgroundColor="#FBFBFF"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp"
-                    app:cardBackgroundColor="#FBFBFF"
                     app:layout_constraintWidth_percent="0.45">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="5dp"
-                        android:gravity="center">
+                        android:padding="5dp">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -162,10 +185,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="16dp"
+                                android:fontFamily="@font/alexandriasemibold"
                                 android:text="Gender"
                                 android:textColor="#85B5A1"
-                                android:textSize="15sp"
-                                android:fontFamily="@font/alexandriasemibold" />
+                                android:textSize="15sp" />
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -178,13 +201,14 @@
                             android:id="@+id/gender"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Female"
-                            android:hint="Gender"
+                            android:layout_marginTop="2dp"
                             android:background="@null"
+                            android:fontFamily="@font/alexandriasemibold"
+                            android:hint="Gender"
+                            android:text="Female"
                             android:textColor="#4F576B"
                             android:textSize="18sp"
-                            android:fontFamily="@font/alexandriasemibold"
-                            android:layout_marginTop="2dp"/>
+                            tools:ignore="TouchTargetSizeCheck" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -194,17 +218,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="27dp"
                     android:layout_marginTop="25dp"
+                    app:cardBackgroundColor="#FBFBFF"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp"
-                    app:cardBackgroundColor="#FBFBFF"
                     app:layout_constraintWidth_percent="0.45">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="5dp"
-                        android:gravity="center">
+                        android:padding="5dp">
 
                         <!-- Title + Icon Row -->
                         <LinearLayout
@@ -217,10 +241,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="41dp"
+                                android:fontFamily="@font/alexandriasemibold"
                                 android:text="Age"
                                 android:textColor="#85B5A1"
-                                android:textSize="15sp"
-                                android:fontFamily="@font/alexandriasemibold" />
+                                android:textSize="15sp" />
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -233,12 +257,13 @@
                             android:id="@+id/age"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:fontFamily="@font/alexandriasemibold"
                             android:hint="Age"
                             android:text="11 months"
-                            android:background="@null"
                             android:textColor="#4F576B"
                             android:textSize="18sp"
-                            android:fontFamily="@font/alexandriasemibold"/>
+                            tools:ignore="TouchTargetSizeCheck" />
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -248,17 +273,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="50dp"
                     android:layout_marginTop="25dp"
+                    app:cardBackgroundColor="#FBFBFF"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp"
-                    app:cardBackgroundColor="#FBFBFF"
                     app:layout_constraintWidth_percent="0.45">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="5dp"
-                        android:gravity="center">
+                        android:padding="5dp">
 
                         <!-- Title + Icon Row -->
                         <LinearLayout
@@ -271,10 +296,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="30dp"
+                                android:fontFamily="@font/alexandriasemibold"
                                 android:text="Color"
                                 android:textColor="#85B5A1"
-                                android:textSize="15sp"
-                                android:fontFamily="@font/alexandriasemibold" />
+                                android:textSize="15sp" />
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -287,13 +312,14 @@
                             android:id="@+id/color"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Cream"
+                            android:layout_marginTop="2dp"
                             android:background="@null"
+                            android:fontFamily="@font/alexandriasemibold"
                             android:hint="Color"
+                            android:text="Cream"
                             android:textColor="#4F576B"
                             android:textSize="18sp"
-                            android:fontFamily="@font/alexandriasemibold"
-                            android:layout_marginTop="2dp"/>
+                            tools:ignore="TouchTargetSizeCheck" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -303,17 +329,17 @@
                     android:layout_marginStart="27dp"
                     android:layout_marginTop="25dp"
                     android:layout_marginBottom="24dp"
+                    app:cardBackgroundColor="#FBFBFF"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp"
-                    app:cardBackgroundColor="#FBFBFF"
                     app:layout_constraintWidth_percent="0.45">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="5dp"
-                        android:gravity="center">
+                        android:padding="5dp">
 
                         <!-- Title + Icon Row -->
                         <LinearLayout
@@ -326,10 +352,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="19dp"
+                                android:fontFamily="@font/alexandriasemibold"
                                 android:text="Weight"
                                 android:textColor="#85B5A1"
-                                android:textSize="15sp"
-                                android:fontFamily="@font/alexandriasemibold" />
+                                android:textSize="15sp" />
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -342,13 +368,14 @@
                             android:id="@+id/weight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:background="@null"
+                            android:fontFamily="@font/alexandriasemibold"
+                            android:hint="weight"
                             android:text="3.6 KG"
                             android:textColor="#4F576B"
-                            android:hint="weight"
-                            android:background="@null"
                             android:textSize="18sp"
-                            android:fontFamily="@font/alexandriasemibold"
-                            android:layout_marginTop="2dp"/>
+                            tools:ignore="TouchTargetSizeCheck" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -358,17 +385,17 @@
                     android:layout_marginStart="50dp"
                     android:layout_marginTop="25dp"
                     android:layout_marginBottom="24dp"
+                    app:cardBackgroundColor="#FBFBFF"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp"
-                    app:cardBackgroundColor="#FBFBFF"
                     app:layout_constraintWidth_percent="0.45">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="5dp"
-                        android:gravity="center">
+                        android:padding="5dp">
 
                         <!-- Title + Icon Row -->
                         <LinearLayout
@@ -381,10 +408,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="21dp"
+                                android:fontFamily="@font/alexandriasemibold"
                                 android:text="Height"
                                 android:textColor="#85B5A1"
-                                android:textSize="15sp"
-                                android:fontFamily="@font/alexandriasemibold" />
+                                android:textSize="15sp" />
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -397,13 +424,14 @@
                             android:id="@+id/height"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="9 Inches"
+                            android:layout_marginTop="2dp"
                             android:background="@null"
+                            android:fontFamily="@font/alexandriasemibold"
                             android:hint="Height"
+                            android:text="9 Inches"
                             android:textColor="#4F576B"
                             android:textSize="18sp"
-                            android:fontFamily="@font/alexandriasemibold"
-                            android:layout_marginTop="2dp"/>
+                            tools:ignore="TouchTargetSizeCheck" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -421,6 +449,21 @@
 <!--            app:layout_constraintHorizontal_bias="0.0"-->
 <!--            app:layout_constraintStart_toEndOf="@+id/profileImageView"-->
 <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addPetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:src="@drawable/add"
+            app:backgroundTint="#1BBCB6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView5"
+            app:tint="#FBFBFF"
+            tools:ignore="SpeakableTextPresentCheck" />
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

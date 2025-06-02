@@ -143,6 +143,7 @@ class SignUp4 : AppCompatActivity() {
                 val uid = auth.currentUser?.uid ?: return@addOnCompleteListener
                 val userRef = firestore.collection("Users").document(uid)
 
+                // Save user basic info (excluding pet)
                 val userData = mutableMapOf<String, Any>(
                     "uid" to uid,
                     "firstName" to SignUpViewModel.firstName,
@@ -152,8 +153,16 @@ class SignUp4 : AppCompatActivity() {
                     "city" to SignUpViewModel.city,
                     "area" to SignUpViewModel.area,
                     "street" to SignUpViewModel.street,
-                    "email" to email,
-                    "pet" to mapOf(
+                    "email" to email
+                )
+
+                SignUpViewModel.profileImageUrl?.let { imageUrl ->
+                    userData["profileImageUrl"] = imageUrl
+                }
+
+                userRef.set(userData).addOnSuccessListener {
+                    // Now add pet to the subcollection
+                    val petData = mapOf(
                         "name" to SignUpViewModel.petName,
                         "gender" to SignUpViewModel.petGender,
                         "dob" to SignUpViewModel.petBirthDate,
@@ -164,28 +173,29 @@ class SignUp4 : AppCompatActivity() {
                         "color" to SignUpViewModel.petColor,
                         "imageUrl" to SignUpViewModel.petImageUrl
                     )
-                )
-                SignUpViewModel.profileImageUrl?.let { imageUrl ->
-                    userData["profileImageUrl"] = imageUrl
-                }
 
-                userRef.set(userData).addOnSuccessListener {
-                    Toast.makeText(this, "Signup successful!", Toast.LENGTH_LONG).show()
-                    startActivity(Intent(this, Login::class.java))
-                    finish()
+                    firestore.collection("Users").document(uid)
+                        .collection("pets")
+                        .add(petData)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Signup successful!", Toast.LENGTH_LONG).show()
+                            startActivity(Intent(this, Login::class.java))
+                            finish()
+                        }
+                        .addOnFailureListener { e ->
+                            showErrorDialog("Failed to save pet: ${e.message}")
+                        }
+
                 }.addOnFailureListener { e ->
-                    Toast.makeText(this, "Firestore Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    showErrorDialog("Failed to save user info: ${e.message}")
                 }
 
             } else {
-                Toast.makeText(
-                    this,
-                    "Signup failed: ${task.exception?.message}",
-                    Toast.LENGTH_LONG
-                ).show()
+                showErrorDialog("Signup failed: ${task.exception?.message}")
             }
         }
     }
+
 
     private fun showSuccessDialog() {
         val builder = AlertDialog.Builder(this)

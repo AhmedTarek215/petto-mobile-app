@@ -75,7 +75,7 @@
                     android:padding="8dp"
                     android:background="@drawable/rounded_calendar_white"
                     app:mcv_showOtherDates="all"
-                    app:mcv_selectionColor="#D16B78"
+                    app:mcv_selectionColor="#80D16B78"
                     app:mcv_dateTextAppearance="@style/CalendarDateText"
                     app:mcv_weekDayTextAppearance="@style/CalendarWeekText"
                     app:mcv_firstDayOfWeek="saturday" />
@@ -90,6 +90,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="32dp"
                 android:nestedScrollingEnabled="false"
+                android:paddingHorizontal="13dp"
+                android:paddingBottom="70dp"
                 tools:listitem="@layout/item_reminder" />
 
         </LinearLayout>
@@ -124,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:contentDescription="Calendar"
-                android:src="@drawable/calendar_pink" />
+                android:src="@drawable/cal_filled" />
 
             <View
                 android:layout_width="0dp"

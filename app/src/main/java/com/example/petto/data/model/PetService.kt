@@ -6,7 +6,7 @@ data class PetService(
     val imageUrl: String = "",
     val service_type: String = "",
     val social_media: String? = null,
-    val services: List<String> = listOf(),
+    val service: List<String> = listOf(),
     val contact_info: String = "",
     val location: String = "",
     val documentId: String = "" ,// we'll set this manually when reading from Firestore

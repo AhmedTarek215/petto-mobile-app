@@ -169,6 +169,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
+                            android:layout_marginEnd="6dp"
                             android:clickable="true"
                             android:focusable="true"
                             android:fontFamily="@font/alexandriaregular"
@@ -198,7 +199,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:layout_marginRight="5dp"
+                            android:layout_marginEnd="7dp"
+                            android:paddingEnd="2dp"
                             android:fontFamily="@font/alexandriaregular"
                             android:text="170 Port Said Street, Al Ibrahimeyah Bahri WA Sidi Gaber, Qism Bab Sharqi, Alexandria Governorate, Alexandria"
                             android:textColor="#4F576B"
@@ -385,6 +387,20 @@
                         android:clipToPadding="false"
                         android:scrollbars="vertical"
                         tools:ignore="SpeakableTextPresentCheck" />
+
+                    <TextView
+                        android:id="@+id/emptyReviewsText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="25dp"
+                        android:text="No reviews yet"
+                        android:textColor="#4F576B"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/alexandriasemibold"
+                        android:gravity="center"
+                        android:visibility="gone" />
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
